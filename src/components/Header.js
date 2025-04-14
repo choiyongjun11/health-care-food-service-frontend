@@ -8,12 +8,38 @@ import logo from '../assets/ph_plant.png';
 
 //전체 헤더 컨테이너
 const HeaderContainer = styled.header `
+  width: 100%;
+  background-color: #88cc88;
+
+  
+`;
+
+//내부 컨텐츠
+const InnerWrapper = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  padding: 20px;
-  background-color: #88cc88;
+
+
+  @media (min-width: 768px) {
+    padding: 0 24px;
+    
+  }
+  @media (min-width: 1024px) {
+    padding: 0 32px;
+    
+  }
+
+  @media (max-width: 1199px) {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+
 
 `;
 
@@ -25,57 +51,72 @@ const Left = styled(Link)`
 `;
 
 const LogoImage = styled.img`
-  
-  height: auto;
+  height: 40px;
   margin-right: 10px;
 `;
 
 const LogoText = styled.span`
-
-  font-size: 24px;
+  font-size: 23px;
   font-weight: bold;
   color: #333;
 `;
 
+// 중앙 메뉴
+const Center = styled.nav`
+  display: flex;
+  gap: 80px;
+  
+`;
+
+const MenuLink = styled(Link)`
+  text-decoration: none;
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+
+`;
+
+
 const Right = styled.nav`
   display: flex;
   gap: 20px;
+  
 
 `;
 
-
-const NavLink = styled(Link)`
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-  font-size: 16px;
-
-  &:hover {
-    color : #007acc;
-  }
-
-`;
-
-function header () {
+function Header () {
 
   return(
     <HeaderContainer>
+      <InnerWrapper>
+
       <Left to = "/">
           <LogoImage src={logo} alt="VITA 로고" />
-          <LogoText> VITA 건강 식단 추천</LogoText>
+          <LogoText> VITA 건강 식단</LogoText>
       </Left>
 
+
+      <Center>
+        <MenuLink to ="/about">소개</MenuLink>
+        <MenuLink to = "/healthtarget">건강목표</MenuLink>
+        <MenuLink to = "/foods">음식</MenuLink>
+        <MenuLink to = "/markets">식재료 마트</MenuLink>
+        <MenuLink to = "/dashboard">대시보드</MenuLink>
+
+     </Center>
+
      <Right>
-      <NavLink to ="/">홈</NavLink>
-      <NavLink to = "/login">로그인</NavLink>
-      <NavLink to = "/auth">회원가입</NavLink>
+      <MenuLink to ="/">홈</MenuLink>
+      <MenuLink to = "/login">로그인</MenuLink>
+      <MenuLink to = "/auth">회원가입</MenuLink>
      </Right>
 
+    </InnerWrapper>
     </HeaderContainer>
 
   );
 
 };
 
-export default header;
+export default Header;
 

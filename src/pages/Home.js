@@ -3,10 +3,11 @@ import Button from "../components/Button";
 import FoodList from "../components/FoodList";
 import Header  from "../components/Header";
 import styled from "styled-components";
+import Footer from "../components/Footer";
 
 
 const PageWrapper = styled.div`
-  padding: 0 20px;
+  padding: 25px;
 `;
 
 function Home() {
@@ -25,6 +26,8 @@ function Home() {
       <Button onClick={() => setCount(count+1)}>클릭</Button>
     </div>
     </PageWrapper>
+
+    <Footer/>
     </>
   );
 
