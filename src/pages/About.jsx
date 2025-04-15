@@ -1,38 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 
-const AboutContainer = styled.section`
-  max-width: 1920px;
-  font-family: 'Noto Sans KR', sans-serif;
-  background-color: #a2de43;
-  padding-bottom: 0;
-`;
-
-const InnerWrapper = styled.div`
-  max-width: 1920px;
-  margin: 0 auto;
-  padding: 0 32px;
-
-  @media (max-width: 768px) {
-    padding: 0 16px;
-  }
-
-  @media (min-width: 1024px) {
-    padding: 0 32px;
-    
-  }
-  @media (max-width: 1199px) {
-    padding: 0 24px;
-  }
-`;
+import PageLayout from "../components/layout/Pagelayout";
 
 const Title = styled.h1`
   font-size: 15rem;
   letter-spacing: 10rem;
   text-align: center;
   margin: 0 auto;
+  
 `;
 
 const Subtitle = styled.h2`
@@ -71,9 +47,7 @@ const Mission = styled.p`
 function About() {
   return (
     <>
-      <Header />
-      <AboutContainer>
-        <InnerWrapper>
+      <PageLayout>
           <Title>VITA</Title>
           <Subtitle>숨을 들이마시듯, 삶을 그려내다.</Subtitle>
           <Content>
@@ -86,10 +60,11 @@ function About() {
             <p>삶을 향한 한 걸음,</p>
           </Content>
           <Highlight>one step toward your story</Highlight>
-          <Mission>당신의 삶에 도움을 주고자 건강한 음식을 추천해주는 플랫폼</Mission>
-        </InnerWrapper>
-      </AboutContainer>
-      <Footer />
+          <Mission>당신의 삶에 도움을 주고자 건강한 음식을 추천해주는 플랫폼</Mission> 
+      
+
+
+      </PageLayout>
     </>
   );
 }

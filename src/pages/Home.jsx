@@ -1,18 +1,7 @@
-import { useState } from "react";
-import Button from "../components/Button";
-import FoodList from "../components/FoodList";
 import React from "react";
-import Header  from "../components/Header";
 import styled from "styled-components";
-import Footer from "../components/Footer";
+import PageLayout from "../components/layout/Pagelayout";
 
-const PageWrapper = styled.section`
-  max-width: 1920px;
-  font-family: 'Noto Sans KR', sans-serif;
-  background-color: #a2de43;
-
-  padding-bottom: 0;
-`;
 
 const Title = styled.h1`
   font-size: 15rem;
@@ -25,16 +14,20 @@ function Home() {
 
 
   return (
-  <>
-      <Header />
-      <PageWrapper>
+  <>    
+
+      
+      <PageLayout>
+
       <Title>VITA</Title>
+      
+    
+      </PageLayout>
 
 
-
-      </PageWrapper>
-      <Footer/>
   </>
+
+  
   );
 }
 

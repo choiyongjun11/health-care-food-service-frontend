@@ -2,8 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 const FooterContainer = styled.footer`
-
-  max-width: 1920px;
   padding: 20px;
   color: black;
   font-size: 14px;
@@ -16,19 +14,14 @@ const FooterContainer = styled.footer`
   //bottom: 0;
   //left: 0;
   //right: 0;
-
-
-
-
 `;
-
 
 function Footer () {
 
   return(
 
     <FooterContainer>
-      Copyright &copy; ChoiYongJun, All Rights Reserved.
+      Copyright &copy; ChoiYongJun, All Rights Reserved
     </FooterContainer>
 
   );
