@@ -2,7 +2,8 @@ import React, {useState} from "react";
 
 const exampleFoods = [
   {id:1, name: '된장찌개'},
-  {id:2, name: '김치찜'}
+  {id:2, name: '김치찜'},
+  {id:3, name: '연어샐러드'}
 ];
 
 function FoodList() {

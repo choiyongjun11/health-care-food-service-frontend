@@ -3,16 +3,23 @@ import styled from "styled-components";
 
 const FooterContainer = styled.footer`
 
-width: 100%;
-padding : 20px;
-color: black;
-font-size: 15px;
-text-align: right; //오른쪽 정렬
-position: fixed; //화면에 고정
-bottom: 0;
-right: 0;
-background-color: #f8f8f8;
-border-top: 1px solid #ddd;
+  max-width: 1920px;
+  padding: 20px;
+  color: black;
+  font-size: 14px;
+  text-align: right;
+  background-color: #f8f8f8;
+  border-top: 1px solid #ddd;
+  
+
+  //position: fixed; //화면고정
+  //bottom: 0;
+  //left: 0;
+  //right: 0;
+
+
+
+
 `;
 
 
