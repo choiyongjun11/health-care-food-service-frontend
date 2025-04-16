@@ -4,19 +4,18 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import logo from '../../assets/ph_plant.png';
 import { Menu } from "lucide-react";
-
+//background-color: #71B700;
 const HeaderContainer = styled.header`
   width: 100%;
   background-color: #71B700;
   border-bottom: 1px solid #ddd;
   position: fixed;
-  
 
 `;
 
 const InnerWrapper = styled.div`
   max-width: 1600px;
-  padding: 0 30px;
+  padding: 0 10rem; //로고와 center 메뉴와 right 메뉴 간의 공백
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -35,7 +34,7 @@ const Logo = styled(Link)`
   gap: 10px;
   text-decoration: none;
   padding: 0.5rem;
-  margin-bottom: 1.5rem ; //로고와 메뉴간의 간격두기
+  //margin-bottom: 2rem ; //로고와 메뉴간의 간격두기
 `;
 
 const LogoImage = styled.img`
@@ -62,9 +61,9 @@ const HamburgerWrapper = styled.div`
 
 const CenterMenu = styled.nav`
   display: flex;
-  gap: 9rem;
+  gap: 5rem;
   color: #555;
-  margin-top: 1.5rem;
+  //margin-top: 1.5rem;
 
 
   ${MenuLink} {
@@ -92,8 +91,8 @@ const CenterMenu = styled.nav`
 const RightMenu = styled.nav`
   color: black;
   display: flex;
-  gap: 20px;
-  margin-top: 1.5rem;
+  gap: 15px;
+  //margin-top: 1.5rem;
   ${MenuLink} {
     color: black;
   }
@@ -126,7 +125,9 @@ const MenuToggle = styled.button`
 function Header () {
 
   return(
-    <HeaderContainer>
+
+    <>
+        <HeaderContainer>
       <InnerWrapper>
         <Logo to="/">
           <LogoImage src={logo} alt="VITA 로고"/>
@@ -139,21 +140,23 @@ function Header () {
           </MenuToggle>
 
           <CenterMenu>
-            <MenuLink to="/about">소개</MenuLink>
-            <MenuLink to="/healthtarget">건강목표</MenuLink>
-            <MenuLink to="/foods">음식</MenuLink>
-            <MenuLink to="/markets">식재료 마트</MenuLink>
-            <MenuLink to="/dashboard">대시보드</MenuLink>
+            <MenuLink to="/about">About Us</MenuLink>
+            <MenuLink to="/target">Health</MenuLink>
+            <MenuLink to="/foods">Food</MenuLink>
+            <MenuLink to="/market">Market</MenuLink>
+            <MenuLink to="/analysis">Analysis</MenuLink>
           </CenterMenu>
         </HamburgerWrapper>
 
         <RightMenu>
-          <MenuLink to="/">홈</MenuLink>
-          <MenuLink to="/login">로그인</MenuLink>
-          <MenuLink to="/auth">회원가입</MenuLink>
+          <MenuLink to="/">Home</MenuLink>
+          <MenuLink to="/login">Login</MenuLink>
+          <MenuLink to="/sigin">Sign Up</MenuLink>
         </RightMenu>
       </InnerWrapper>
     </HeaderContainer>
+    </>
+
   );
 };
 

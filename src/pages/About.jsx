@@ -1,52 +1,42 @@
 import React from "react";
 import styled from "styled-components";
-
 import PageLayout from "../components/layout/Pagelayout";
 
-const Title = styled.h1`
+const Title = styled.div`
   font-size: 15rem;
-  letter-spacing: 10rem;
   text-align: center;
+  letter-spacing: 10rem;
+  background-color: #72a71f;
   margin: 0 auto;
+
   
 `;
 
-const Subtitle = styled.h2`
+const Subtitle = styled.div`
   font-size: 5rem;
   text-align: center;
-  margin: 2rem 0;
-  padding: 2rem 0;
+  margin: 2rem auto;
+  
 `;
 
 const Content = styled.div`
   font-size: 1.2rem;
   text-align: center;
   line-height: 2.2rem;
-  margin: 2rem 0;
+  margin: 2rem;
 `;
 
 const Highlight = styled.p`
   font-size: 1.2rem;
   font-weight: bold;
   text-align: center;
-  margin: 2rem 0;
+  
 `;
 
-const Mission = styled.p`
-  font-size: 1.2rem;
-  font-weight: 500;
-  margin-top: 2rem;
-  margin-left: 10rem;
-  margin-right: 10rem;
-  padding-top: 1rem;
-  border-top: 1px solid #eee;
-  color: #555;
-  text-align: right;
-`;
 
 function About() {
   return (
-    <>
+  <>
       <PageLayout>
           <Title>VITA</Title>
           <Subtitle>숨을 들이마시듯, 삶을 그려내다.</Subtitle>
@@ -59,13 +49,9 @@ function About() {
             <p>비타민처럼, 조용히. 하지만 분명하게. 우리를 살아가게 하는 것들처럼.</p>
             <p>삶을 향한 한 걸음,</p>
           </Content>
-          <Highlight>one step toward your story</Highlight>
-          <Mission>당신의 삶에 도움을 주고자 건강한 음식을 추천해주는 플랫폼</Mission> 
-      
-
-
+          <Highlight>one step to ward your story</Highlight>
       </PageLayout>
-    </>
+  </>
   );
 }
 
