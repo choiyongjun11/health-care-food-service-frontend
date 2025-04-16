@@ -11,7 +11,7 @@ const Wrapper = styled.section`
   font-family: 'Noto Sans KR', sans-serif;
   background-color: #a2de43;
 
-
+//
 
   @media (max-width: 1200px) {
     padding: 0 24px;

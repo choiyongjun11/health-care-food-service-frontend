@@ -14,7 +14,7 @@ const HeaderContainer = styled.header`
 `;
 
 const InnerWrapper = styled.div`
-  max-width: 1600px;
+  max-width: 1920px;
   padding: 0 10rem; //로고와 center 메뉴와 right 메뉴 간의 공백
   display: flex;
   justify-content: space-between;

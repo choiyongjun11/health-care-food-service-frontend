@@ -8,6 +8,7 @@ import Health from './pages/Health';
 import Foods from './pages/Foods';
 import Market from './pages/Market';
 import Analysis from './pages/Analysis';
+import SimpleLogin from './examples/Simplelogin';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/foods" element={<Foods />} />
         <Route path="/market" element={<Market />} />
         <Route path="/analysis" element={<Analysis/>} />
+        <Route path="/simplelogin" element={<SimpleLogin/>} />
 
 
 
