@@ -26,8 +26,6 @@ function App() {
         <Route path="/analysis" element={<Analysis/>} />
         <Route path="/simplelogin" element={<SimpleLogin/>} />
 
-
-
       </Routes>
     </BrowserRouter>
 

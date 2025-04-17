@@ -195,11 +195,11 @@ export default function Login () {
     {/*3.input 요소에 value와 onchange를 연결하여 양방향 바인딩을 만듭니다. */}
     
     <FormGroup>
-      <Label htmlFor="email">아이디</Label>
+      <Label htmlFor="email">아이디(이메일 형식)</Label>
       <Input
       id="email"
       type = "email" //@ 특수문자 포함하게 하는 기능
-      placeholder="이메일을 입력하세요"
+      placeholder="아이디를 입력하세요"
       value={email}
       onChange={handleEmailChange}
       />
