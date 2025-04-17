@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import PageLayout from "../components/layout/Pagelayout";
+import { useNavigate } from "react-router-dom";
+
+
 
 const Title = styled.div`
   font-size: 15rem;
@@ -8,7 +11,6 @@ const Title = styled.div`
   letter-spacing: 10rem;
   background-color: #72a71f;
   margin: 0 auto;
-
   
 `;
 
@@ -33,11 +35,49 @@ const Highlight = styled.p`
   
 `;
 
+const LogoutButtom = styled.button`
+  margin: 2rem auto;
+  padding: 10px 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background-color: #666;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #444;
+  }
+
+
+`;
+
 
 function About() {
+  const navigate = useNavigate();
+  //const hasAlertedRef = useRef(false); 알림이 여러번 뜨는 걸 방지하고자 처음에 false
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+   // if (!token && !hasAlertedRef.current) {
+    if (!token) {
+      //handleLogout.current = true; //경고 1회만 실행
+      //alert("로그인이 필요합니다.");
+      navigate("/login", { replace: true }); // 뒤로가기 stack에 안 남김!
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
   return (
-  <>
+
       <PageLayout>
+
+          <LogoutButtom onClick={handleLogout}>로그아웃</LogoutButtom>
           <Title>VITA</Title>
           <Subtitle>숨을 들이마시듯, 삶을 그려내다.</Subtitle>
           <Content>
@@ -51,8 +91,12 @@ function About() {
           </Content>
           <Highlight>one step to ward your story</Highlight>
       </PageLayout>
-  </>
+  
   );
 }
 
 export default About;
+
+
+
+
