@@ -1,11 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef } from "react"; //state -상태변경, useRef - 자동 포커스
 import styled from "styled-components";
-
-
+import { useNavigate } from "react-router-dom"; //화면 이동
 const Container = styled.div`
   max-width: 600px;
-  margin: 0.5rem auto;
-  padding: 2rem;
+  margin: 1rem auto;
+  padding: 0.5rem;
   background-color: #8fd0a9; 
   border-radius: 8px;
 `;
@@ -25,7 +24,6 @@ const Form = styled.form`
 
 `;
 
-
 const FormGroup = styled.div`
   
   margin-bottom:1rem;
@@ -40,7 +38,7 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-  width: 100%;
+  width: 30%;
   height: 40px;
   
   border: 1px solid #ddd;
@@ -55,9 +53,9 @@ const Optionalmessage = styled.p`
 
 const Button = styled.button`
   
-  padding: 10px;
+  padding: 7px;
   color:black;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   border: none;
   border-radius: 4px; 
@@ -70,20 +68,24 @@ const Button = styled.button`
 
 
 export default function Sigin() {
-
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [birthday, setBirthday] = useState('');
-
-  //전화번호 각 필드 자동 포커스 이동 기능능
+ 
+  //전화번호 각 필드 자동 포커스 이동 기능
   const [tel1, setTel1] = useState("010");
   const [tel2, setTel2] = useState("");
   const [tel3, setTel3] = useState("");
+  const phoneNumber = `${tel1}-${tel2}-${tel3}`;
 
-  const tel2Ref = useRef(null);
+  const tel2Ref = useRef(null); //자동 포커스
   const tel3Ref = useRef(null);
 
+  //필드에 값 입력 시 버튼 색상 활성화 기능
+  const isActive = email.trim() !== "" && password.trim() !== "" &&
+  username.trim() !== "" && birthday.trim() !=="";
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value); // 사용자가 입력한 email 값을 상태에 저장
@@ -101,7 +103,6 @@ export default function Sigin() {
   const handleBirthdayChange = (e) => {
     setBirthday(e.target.value); //사용자가 입력한 birthday 값을 상태에 저장
   }
-
 
   const handleTel1Change = (e) => {
     const value = e.target.value.replace(/\D/g, ""); // 숫자만
@@ -124,7 +125,7 @@ export default function Sigin() {
     setTel3(value);
   };
 
-  const phoneNumber = `${tel1}-${tel2}-${tel3}`;
+
 
 
   const handleSubmit = async (e) => {
@@ -134,8 +135,40 @@ export default function Sigin() {
     console.log('비밀번호', password);
     console.log('이름',username);
     console.log('생년월일',birthday);
-    
-    };
+    console.log('휴대전화번호',phoneNumber);
+
+      // fake 서버 응답 흉내내기
+      setTimeout(() => {
+        console.log("임시 회원가입 성공");
+        navigate("/login");
+      }, 1001);
+
+
+    // 회원가입 처리 로직 실행 fetch POST 요청 보내기 → 회원 저장
+    //스프링 연동 시 아래 주석 해제하자.
+    // try {
+    //   const request = await fetch("http://localhost:8080/signup", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     // 회원가입 폼 데이터
+    //     body: JSON.stringify({email, password,username, birthday, phoneNumber}), 
+    //   });
+
+    //   if (request.ok) {
+    //     // 성공 시 로그인 페이지로 이동
+    //     navigate("/login");
+    //   } else {
+    //     const result = await request.json();
+    //     alert(result.message || "회원가입 실패");
+    //   }
+    // } catch (error) {
+    //   console.error("회원가입 에러", error.message);
+    //   alert("서버 오류가 발생했습니다.");
+    // }
+
+  };
 
 
   return (
@@ -196,7 +229,7 @@ export default function Sigin() {
       </FormGroup>
 
       <FormGroup>
-      <Label htmlFor="phone">휴대전화번호</Label>
+      <Label htmlFor="phone">휴대전화번호 (숫자만 입력)</Label>
       <Input id="tel1" type="text" maxLength={3} value={tel1} onChange={handleTel1Change}/>-
       <Input id="tel2" type="text" maxLength={4} value={tel2} ref={tel2Ref} onChange={handleTel2Change}/>-
       <Input id="tel3" type="text" maxLength={4} value={tel3} ref={tel3Ref} onChange={handleTel3Change}/>
@@ -205,7 +238,7 @@ export default function Sigin() {
       <p style={{ marginTop: "10px", fontWeight: "bold" }}>입력된 번호: {phoneNumber}</p>
     </FormGroup>
 
-      <Button type="submit">회원가입 완료</Button>
+      <Button type="submit" disabled={!isActive} >회원가입 완료</Button>
 
     </Form>
 
