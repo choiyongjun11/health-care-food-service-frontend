@@ -1,16 +1,16 @@
 //홈페이지 윗 상단의 헤더라인에는 우리 사이트의 로고 이미지가 들어 있어야 합니다. 또한 image 를 눌렀을 때 main 페이지로 들어 올 수 있도록 만들어야 합니다.
 
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import logo from '../../assets/ph_plant.png';
 import { Menu } from "lucide-react";
-//background-color: #71B700;
+import logo from '../../assets/ph_plant.png';
+
 const HeaderContainer = styled.header`
   width: 100%;
   background-color: #71B700;
   border-bottom: 1px solid #ddd;
   position: fixed;
-
 `;
 
 const InnerWrapper = styled.div`
@@ -118,16 +118,21 @@ const MenuToggle = styled.button`
   @media (max-width: 768px) {
     display: block;
     
-  
   }
 `;
 
-function Header () {
+export default function Header () {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    // 로그인 상태 감지
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      setIsLoggedIn(!!token);
+    }, []);
 
   return(
-
-    <>
-        <HeaderContainer>
+    <HeaderContainer>
       <InnerWrapper>
         <Logo to="/">
           <LogoImage src={logo} alt="VITA 로고"/>
@@ -149,15 +154,26 @@ function Header () {
         </HamburgerWrapper>
 
         <RightMenu>
-          <MenuLink to="/">Home</MenuLink>
-          <MenuLink to="/login">Login</MenuLink>
-          <MenuLink to="/sigin">Sign Up</MenuLink>
+        <MenuLink to="/">Home</MenuLink>
+
+        {isLoggedIn ? (
+          <>
+            <MenuLink to="/logout">Logout</MenuLink>
+            <MenuLink to="/mypage">MyPage</MenuLink>
+          </>
+        ) : (
+          <>
+            <MenuLink to="/login">Login</MenuLink>
+            <MenuLink to="/sigin">Sign Up</MenuLink>
+          </>
+        )}
+
         </RightMenu>
+
       </InnerWrapper>
     </HeaderContainer>
-    </>
+    
 
   );
 };
 
-export default Header;

@@ -3,14 +3,14 @@ import styled from "styled-components";
 import PageLayout from "../components/layout/Pagelayout";
 
 
-function Analysis() {
+export default function Analysis() {
 
   return (
 
   <>
   <PageLayout>
 
-  <h1>hello analysis@@##</h1>
+  <h1>hello analysis</h1>
   
   </PageLayout>
   
@@ -18,6 +18,5 @@ function Analysis() {
 
   );
 
-}
+};
 
-export  default Analysis;

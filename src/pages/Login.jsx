@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-
 const Container = styled.div`
   max-width: 400px;
   margin: 2rem auto;
@@ -93,14 +92,12 @@ const Button = styled.button`
 
 
 const ErrorMessage = styled.p`
-  
   color:red;
   font-size: 1rem;
-
   margin: 2px;
   font-weight: bold;
   
-`
+`;
 
 export default function Login () {
 
@@ -139,51 +136,76 @@ export default function Login () {
   //브라우저 기본 동작을 막고, 현재 상태(email, password)를 확인 해보는 용도입니다.
 
     const handleSubmit = async (e) => {
-      e.preventDefault(); //페이지 새로고침 방지
-      console.log('이메일:' ,email);
-      console.log('비밀번호:',password);
+    //   e.preventDefault(); //페이지 새로고침 방지
+    //   console.log('이메일:' ,email);
+    //   console.log('비밀번호:',password);
 
-      
-    //6.서버에 로그인 요청을 보내기 위한 json 데이터 형식
-    const loginData = {
-      email: email,
-      password: password,
-    };
+    // 스프링 연동 시 아래 주석 해제하자.
+    // //6.서버에 로그인 요청을 보내기 위한 json 데이터 형식
+    // const loginData = {
+    //   email: email,
+    //   password: password,
+    // };
     
-    //7. fetch로 post 요청 보내기
+    // //7. fetch로 post 요청 보내기
+    // try {
+    //   const request = await fetch('http://localhost:8080/login', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json', //요청이 json임을 알림
+    //     },
+    //     body:JSON.stringify(loginData), //javascript 객체 -> json 문자열로 변환
+    //   });
+
+    //   //8. 서버 응답을 json 형태로 파싱
+    //   const result = await request.json();
+
+    //   if(!response.ok) {
+    //     throw new Error(result.message || "아이디 또는 비밀번호가 올바르지 않습니다.") //throw 를 사용하여 실패 응답이면 바로 catch로 보내버린다.
+    //   }
+
+
+    //   //성공처리
+    //   console.log("로그인 성공", result);
+    //   localStorage.setItem("token", result.token);
+    //   localStorage.setItem("userName", result.name);
+    //   navigate("/");
+
+
+    //   } catch(error) {
+    //     console.error("로그인 실패", error.message);
+    //     setEmail("");
+    //     setPassword("");
+    //     setErrorMessage("아이디 또는 비밀번호가 잘못 되었습니다.\n아이디와 비밀번호를 정확히 입력해 주세요."); //에러 메시지 표시
+  
+    // }
+  
+
+    e.preventDefault();
+
     try {
-      const response = await fetch('http://localhost:8080/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json', //요청이 json임을 알림
-        },
-        body:JSON.stringify(loginData), //javascript 객체 -> json 문자열로 변환
-      });
+      // json-server에 GET 요청으로 사용자 검증
+      const request = await fetch(
+        `http://localhost:3001/users?email=${email}&password=${password}`
+      );
+      const result = await request.json();
 
-      //8. 서버 응답을 json 형태로 파싱
-      const result = await response.json();
-
-      if(!response.ok) {
-        throw new Error(result.message || "아이디 또는 비밀번호가 올바르지 않습니다.") //throw 를 사용하여 실패 응답이면 바로 catch로 보내버린다.
-      }
-
-
-      //성공처리
-      console.log("로그인 성공", result);
-      localStorage.setItem("token", result.token);
-      localStorage.setItem("userName", result.name);
-      navigate("/");
-
-
-      } catch(error) {
-        console.error("로그인 실패", error.message);
+      if (result.length > 0) {
+        const user = result[0]; // 일치하는 유저 정보
+        localStorage.setItem("token", user.token);
+        localStorage.setItem("userName", user.name);
+        navigate("/");
+      } else {
         setEmail("");
         setPassword("");
-        setErrorMessage("아이디 또는 비밀번호가 잘못 되었습니다.\n아이디와 비밀번호를 정확히 입력해 주세요."); //에러 메시지 표시
-  
+        setErrorMessage(
+          "아이디 또는 비밀번호가 잘못 되었습니다.\n아이디와 비밀번호를 정확히 입력해 주세요."
+        );
+      }
+    } catch (error) {
+      console.error("로그인 실패", error.message);
+      setErrorMessage("서버에 연결할 수 없습니다. 나중에 다시 시도해 주세요.");
     }
-  
-
     };
 
     return (
@@ -226,8 +248,7 @@ export default function Login () {
         </React.Fragment>
       ))}
       </ErrorMessage>
-      )
-      }
+      )}
 
       {/*errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage> - 한문장으로 에러 메시지 발송*/}
     </FormGroup>

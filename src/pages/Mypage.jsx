@@ -1,23 +1,22 @@
 import React from "react";
-import styled from "styled-components";
 import PageLayout from "../components/layout/Pagelayout";
 
+export default function Mypage() {
 
 
-export default function Market() {
-
-  return (
-
+  return(
     <PageLayout>
-
-    <h1>hello market!!!!!</h1>
     
-
+    <h1>마이페이지입니다.</h1>
+    
     </PageLayout>
 
-    
-    
-    
+
+
+
 
   );
+  
+  
+
 };

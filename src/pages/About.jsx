@@ -37,7 +37,7 @@ const Highlight = styled.p`
 
 
 
-function About() {
+export default function About() {
 
   return (
 
@@ -58,9 +58,10 @@ function About() {
       </PageLayout>
   
   );
-}
 
-export default About;
+
+};
+
 
 
 

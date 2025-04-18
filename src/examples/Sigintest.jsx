@@ -47,9 +47,12 @@ const Input = styled.input`
 
 `;
 
+const Optionalmessage = styled.p`
+
+`;
 
 const Button = styled.button`
-
+  
   padding: 7px;
   color:black;
   font-size: 1.5rem;
@@ -64,13 +67,13 @@ const Button = styled.button`
 `;
 
 
-export default function Sigin() {
+export default function Sigintest() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [birthday, setBirthday] = useState('');
-
+ 
   //전화번호 각 필드 자동 포커스 이동 기능
   const [tel1, setTel1] = useState("010");
   const [tel2, setTel2] = useState("");
@@ -123,36 +126,54 @@ export default function Sigin() {
   };
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+
+//test1)
+  // const handleSubmit = async (e) => {
+
+  //   e.preventDefault(); //페이지 새로고침 방지
+  //   console.log('이메일', email);
+  //   console.log('비밀번호', password);
+  //   console.log('이름',username);
+  //   console.log('생년월일',birthday);
+  //   console.log('휴대전화번호',phoneNumber);
+
+  //     fake 서버 응답 흉내내기
+  //     setTimeout(() => {
+  //       console.log("임시 회원가입 성공");
+  //       navigate("/login");
+  //     }, 1001);
+  //   };
+
+//test2)
+      const handleSubmit = async (e) => {
+        e.preventDefault();
       
-    // 회원가입 처리 로직 실행 fetch POST 요청 보내기 → 회원 저장
-    //스프링 연동 시 아래 주석 해제하자.
-    // try {
-    //   const request = await fetch("http://localhost:8080/signup", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     // 회원가입 폼 데이터
-    //     body: JSON.stringify({email, password,username, birthday, phoneNumber}), 
-    //   });
-
-    //   if (request.ok) {
-    //     // 성공 시 로그인 페이지로 이동
-    //     navigate("/login");
-    //   } else {
-    //     const result = await request.json();
-    //     alert(result.message || "회원가입 실패");
-    //   }
-    // } catch (error) {
-    //   console.error("회원가입 실패", error.message);
-    //   alert("정보를 다시 입력해주세요.");
-    // }
-
-    };
-
-
+        try {
+          const request = await fetch("http://localhost:3001/users", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              password,
+              username,
+              birthday,
+              phoneNumber,
+            }),
+          });
+      
+          if (request.ok) {
+            console.log("회원가입 성공! (json-server)");
+            navigate("/login");
+          } else {
+            alert("회원가입 실패 (json-server)");
+          }
+        } catch (error) {
+          console.error("에러 발생:", error);
+          alert("서버 연결 실패");
+        }
+      };
 
   return (
     
@@ -224,6 +245,7 @@ export default function Sigin() {
       <Button type="submit" disabled={!isActive} >회원가입 완료</Button>
 
     </Form>
+
 
 
     </Container>

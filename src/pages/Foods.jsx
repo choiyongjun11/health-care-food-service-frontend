@@ -3,11 +3,11 @@ import styled from "styled-components";
 import PageLayout from "../components/layout/Pagelayout";
 
 
-function Foods() {
+export default function Foods() {
 
   return (
 
-    <>
+
 
     <PageLayout>
 
@@ -19,10 +19,8 @@ function Foods() {
     
     
     
-    </>
 
   );
-}
 
 
-export default Foods;
+};

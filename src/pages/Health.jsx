@@ -1,26 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-
-
-const LogoutButtom = styled.button`
-  margin: 2rem auto;
-  padding: 10px 30px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  background-color: #666;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #444;
-  }
-
-
-`;
-
+import PageLayout from "../components/layout/Pagelayout";
 
 export default function Health() {
 
@@ -36,12 +17,16 @@ export default function Health() {
         navigate("/login", { replace: true }); // 뒤로가기 stack에 안 남김!
       }
     }, [navigate]);
+
+
   
-
-
   return(
 
-    <LogoutButtom>버튼</LogoutButtom>
+    <PageLayout>
+    <h1>건강목표 화면 입니다.</h1>
+    </PageLayout>
+
+
 
   );
 

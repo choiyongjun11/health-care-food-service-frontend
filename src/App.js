@@ -8,7 +8,9 @@ import Health from './pages/Health';
 import Foods from './pages/Foods';
 import Market from './pages/Market';
 import Analysis from './pages/Analysis';
-import SimpleLogin from './examples/Simplelogin';
+import Logout from './pages/Logout';
+import Sigintest from './examples/Sigintest';
+import Mypage from './pages/Mypage';
 
 function App() {
   return (
@@ -17,14 +19,20 @@ function App() {
       <Routes>
 
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/sigin" element={<Sigin />} /> 
+        <Route path="/sigin" element={<Sigin />} />
+
+        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/logout" element={<Logout />} />
+
+        <Route path="/about" element={<About />} /> 
         <Route path="/target" element={<Health />} />
         <Route path="/foods" element={<Foods />} />
         <Route path="/market" element={<Market />} />
         <Route path="/analysis" element={<Analysis/>} />
-        <Route path="/simplelogin" element={<SimpleLogin/>} />
+        
+        <Route path="/sigintest" element={<Sigintest/>} />
+
 
       </Routes>
     </BrowserRouter>
