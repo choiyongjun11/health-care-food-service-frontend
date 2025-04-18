@@ -1,22 +1,26 @@
 import React, {useState, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
   max-width: 400px;
-  margin: 2rem auto;
-  padding: 5rem;
+  margin: 5rem auto;
+  padding: 3rem;
   background-color: #8fd0a9; 
   border-radius: 8px;
 `;
 
-const Title = styled.h1`
-  text-align: center;
-  margin-bottom: 2rem;
+const Title = styled(Link)`
+  
+  text-decoration: none;
   font-size: 1.8rem;
-  border-bottom: 2px solid #333;
-  padding-bottom: 1rem;
+  font-weight: bold;
+  color: black;
   letter-spacing: 15px;
+
+  display: block;
+  text-align: center;
+  margin-bottom: 1.5rem; 
 `;
 
 const Form = styled.form`
@@ -25,8 +29,8 @@ const Form = styled.form`
 `;
 
 const FormGroup = styled.div`
-  
-  margin-bottom:1rem;
+  margin-bottom: 1.5rem; 
+  margin-top: 1rem; 
 `;
 
 
@@ -34,7 +38,7 @@ const Label = styled.label`
   display: block;
   margin-bottom: 0.5rem;
   font-weight: bold;
-
+  
 `;
 
 const Input = styled.input`
@@ -135,89 +139,91 @@ export default function Login () {
   //4. 로그인 폼을 제출할 때 실행되는 함수입니다.
   //브라우저 기본 동작을 막고, 현재 상태(email, password)를 확인 해보는 용도입니다.
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault(); // 새로고침 방지
+  //   console.log("이메일:", email);
+  //   console.log("비밀번호:", password);
+  
+  //   const loginData = {
+  //     email: email,
+  //     password: password,
+  //   };
+  
+  //   try {
+  //     const response = await fetch("http://localhost:8080/login", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(loginData),
+  //     });
+  
+  //     const result = await response.json();
+  
+  //     if (!response.ok) {
+  //       // 실패 응답이면 예외 처리
+  //       throw new Error(result.message || "아이디 또는 비밀번호가 올바르지 않습니다.");
+  //     }
+  
+  //     // 로그인 성공
+  //     console.log("로그인 성공", result);
+  //     localStorage.setItem("token", result.token); // JWT
+  //     localStorage.setItem("userName", result.name); // 사용자 이름
+  //     navigate("/");
+  
+  //   } catch (error) {
+  //     console.error("로그인 실패", error.message);
+  //     setEmail("");
+  //     setPassword("");
+  //     setErrorMessage(
+  //       "아이디 또는 비밀번호가 잘못 되었습니다.\n아이디와 비밀번호를 정확히 입력해 주세요."
+  //     );
+  //   }
+  // };
+  
+
     const handleSubmit = async (e) => {
-    //   e.preventDefault(); //페이지 새로고침 방지
-    //   console.log('이메일:' ,email);
-    //   console.log('비밀번호:',password);
+      e.preventDefault(); //페이지 새로고침 방지
 
-    // 스프링 연동 시 아래 주석 해제하자.
-    // //6.서버에 로그인 요청을 보내기 위한 json 데이터 형식
-    // const loginData = {
-    //   email: email,
-    //   password: password,
-    // };
-    
-    // //7. fetch로 post 요청 보내기
-    // try {
-    //   const request = await fetch('http://localhost:8080/login', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json', //요청이 json임을 알림
-    //     },
-    //     body:JSON.stringify(loginData), //javascript 객체 -> json 문자열로 변환
-    //   });
-
-    //   //8. 서버 응답을 json 형태로 파싱
-    //   const result = await request.json();
-
-    //   if(!response.ok) {
-    //     throw new Error(result.message || "아이디 또는 비밀번호가 올바르지 않습니다.") //throw 를 사용하여 실패 응답이면 바로 catch로 보내버린다.
-    //   }
-
-
-    //   //성공처리
-    //   console.log("로그인 성공", result);
-    //   localStorage.setItem("token", result.token);
-    //   localStorage.setItem("userName", result.name);
-    //   navigate("/");
-
-
-    //   } catch(error) {
-    //     console.error("로그인 실패", error.message);
-    //     setEmail("");
-    //     setPassword("");
-    //     setErrorMessage("아이디 또는 비밀번호가 잘못 되었습니다.\n아이디와 비밀번호를 정확히 입력해 주세요."); //에러 메시지 표시
-  
-    // }
-  
-
-    e.preventDefault();
-
-    try {
-      // json-server에 GET 요청으로 사용자 검증
-      const request = await fetch(
-        `http://localhost:3001/users?email=${email}&password=${password}`
-      );
-      const result = await request.json();
-
-      if (result.length > 0) {
-        const user = result[0]; // 일치하는 유저 정보
-        localStorage.setItem("token", user.token);
-        localStorage.setItem("userName", user.name);
+      try {
+        const request = await fetch(`http://localhost:3001/users?email=${email}&password=${password}`);
+        const result = await request.json();
+      
+        // 실패한 경우 (유저가 없을 때)
+        if (result.length === 0) {
+          setEmail("");
+          setPassword("");
+          setErrorMessage(
+            "아이디 또는 비밀번호가 잘못 되었습니다.\n아이디와 비밀번호를 정확히 입력해 주세요."
+          );
+          return; // 더 이상 진행하지 않음
+        }
+      
+        // 성공한 경우
+        const user = result[0];
+        localStorage.setItem("token", user.token || "mock-token");
+        localStorage.setItem("userName", user.username);
+        localStorage.setItem("email", user.email);
         navigate("/");
-      } else {
-        setEmail("");
-        setPassword("");
-        setErrorMessage(
-          "아이디 또는 비밀번호가 잘못 되었습니다.\n아이디와 비밀번호를 정확히 입력해 주세요."
-        );
+      
+      } catch (error) {
+        // 네트워크 에러, 서버 꺼짐 등
+        console.error("서버 오류 발생", error.message);
+        setErrorMessage("서버에 연결할 수 없습니다. 나중에 다시 시도해 주세요.");
       }
-    } catch (error) {
-      console.error("로그인 실패", error.message);
-      setErrorMessage("서버에 연결할 수 없습니다. 나중에 다시 시도해 주세요.");
-    }
+      
     };
 
+
     return (
-
     <Container>
-
-    <Title> VITA </Title>
+    <Title to ="/"> VITA </Title>
+    
     <Form onSubmit={handleSubmit}>
     {/*3.input 요소에 value와 onchange를 연결하여 양방향 바인딩을 만듭니다. */}
     
     <FormGroup>
-      <Label htmlFor="email">아이디(이메일 형식)</Label>
+      <Label htmlFor="email">아이디 (이메일 형식)</Label>
       <Input
       id="email"
       type = "email" //@ 특수문자 포함하게 하는 기능
@@ -268,9 +274,11 @@ export default function Login () {
     
     </Form>
     <LinkMenu>
-        <a href="#">아이디 찾기</a>
-        <a href="#">비밀번호 찾기</a>
-        <a href="#">회원가입</a>
+
+    <Link to="#">아이디 찾기</Link>
+    <Link to="#">비밀번호 찾기</Link>
+    <Link to="/sigin">회원가입</Link>
+
     </LinkMenu>
   
     </Container>
