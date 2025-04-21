@@ -5,12 +5,13 @@ import About from './pages/About';
 import Login from './pages/Login';
 import Sigin from './pages/Sigin';
 import Health from './pages/Health';
-import Foods from './pages/Foods';
+import FoodList from './pages/Foodlist';
 import Market from './pages/Market';
 import Analysis from './pages/Analysis';
 import Logout from './pages/Logout';
 import Sigintest from './examples/Sigintest';
 import Mypage from './pages/Mypage';
+
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
 
         <Route path="/about" element={<About />} /> 
         <Route path="/target" element={<Health />} />
-        <Route path="/foods" element={<Foods />} />
+        <Route path="/foodlist" element={<FoodList />} />
         <Route path="/market" element={<Market />} />
         <Route path="/analysis" element={<Analysis/>} />
         

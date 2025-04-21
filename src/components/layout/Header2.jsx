@@ -10,7 +10,9 @@ const HeaderContainer = styled.header`
   width: 100%;
   background-color: #71B700;
   border-bottom: 1px solid #ddd;
-  position: fixed;
+  position: sticky;
+  top: 0;
+  z-index: 1000; //다른 요소보다 위로 올리기
 `;
 
 const InnerWrapper = styled.div`
@@ -147,7 +149,7 @@ export default function Header () {
           <CenterMenu>
             <MenuLink to="/about">About Us</MenuLink>
             <MenuLink to="/target">Health</MenuLink>
-            <MenuLink to="/foods">Food</MenuLink>
+            <MenuLink to="/foodList">Food</MenuLink>
             <MenuLink to="/market">Market</MenuLink>
             <MenuLink to="/analysis">Analysis</MenuLink>
           </CenterMenu>

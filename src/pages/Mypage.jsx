@@ -19,6 +19,7 @@ const Title = styled.div`
 
 const Content = styled.div`
  background-color: white;
+ 
 
 `;
 

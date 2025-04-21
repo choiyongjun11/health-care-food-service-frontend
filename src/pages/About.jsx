@@ -35,8 +35,6 @@ const Highlight = styled.p`
   
 `;
 
-
-
 export default function About() {
 
   return (

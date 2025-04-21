@@ -5,7 +5,7 @@ import Footer from "./Footer";
 
 const Wrapper = styled.section`
   
-  padding-top: 100px;
+
   max-width: 1920px;
   
   font-family: 'Noto Sans KR', sans-serif;
