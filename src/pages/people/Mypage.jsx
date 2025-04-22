@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import PageLayout from "../components/layout/Pagelayout";
-import UserSettings from "../components/Usersetting";
-import UserActivity from "../components/Useractivity";
+import PageLayout from "../../components/layout/Pagelayout";
+import UserSettings from "../../components/Usersetting";
+import UserActivity from "../../components/Useractivity";
+
 
 // 마이페이지 탭 형식으로 구성하자!
 
@@ -11,21 +12,22 @@ const Title = styled.div`
   text-align: center;
   font-weight: bold;
   background-color: white;
-  margin: 0;
+  margin: 0 auto;
 
   padding: 15px;
 
 `;
 
 const Content = styled.div`
- background-color: white;
- 
+margin: auto;
+background-color: white;
+
 
 `;
 
 const TabButton = styled.button`
   padding: 1rem;
-
+  margin: auto;
   font-size: 1.5rem;
   font-weight: bold;
   width: 50%;

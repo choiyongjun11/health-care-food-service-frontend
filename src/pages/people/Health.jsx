@@ -1,8 +1,18 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import PageLayout from "../components/layout/Pagelayout";
+import PageLayout from "../../components/layout/Pagelayout";
 
+
+const Title = styled.h1`
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0 auto;
+
+  padding: 0 10rem;
+  padding-top: 2rem;
+  
+`;
 export default function Health() {
 
     const navigate = useNavigate();
@@ -23,7 +33,9 @@ export default function Health() {
   return(
 
     <PageLayout>
-    <h1>건강목표 화면 입니다.</h1>
+
+    <Title>건강</Title>
+    
     </PageLayout>
 
 

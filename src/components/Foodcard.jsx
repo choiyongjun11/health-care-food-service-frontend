@@ -1,18 +1,18 @@
 import React from "react";
 import styled from "styled-components";
-import {useNavigate } from "react-router-dom";
+
 
 //음식 1개의 카드 UI를 담당한다. 클릭 시 상세 페이지로 이동 가능하도록 구현
-//음식 1개를 보여주는 카드 단위 UI 컴포넌트
+//음식 1개를 보여주는 카드 단위 UI 컴포넌트 담당
 //카드 클릭 시 상세 페이지로 이동 하기
 
 const CardWrapper = styled.div`
-    position: relative;
-  border: 1px solid #ccc;
+  position: relative;
+  border: 3px solid black;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #fff;
-  cursor: pointer;
+  background-color: white;
+  //min-height: 320px; 이미지 삽입 시 해제
 
 `;
 
@@ -24,8 +24,12 @@ const Info = styled.div`
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  font-size: 0.9rem;
-  margin: 0.5rem;
+  font-size: 1rem;
+  margin: 0.2rem;
+
+  border-radius: 10px;
+  border-bottom: 2px solid;
+  background-color: rgb(186, 186, 186);
 
 `;
 
@@ -44,7 +48,9 @@ const Title = styled.h3`
 
 const Desc = styled.p`
   font-size: 0.9rem;
-  color: #666;
+  color: #878686;
+  white-space: normal;
+  overflow-wrap: break-word;
 `;
 
 const Stat = styled.div`
@@ -57,24 +63,18 @@ const Stat = styled.div`
 
 export default function FoodCard({ food }) {
 
-  const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(`/foods/${food.id}`);
-
-
-  };
 
   return (
-    <CardWrapper onClick={handleClick}>
+    <CardWrapper>
       <Header>No.{food.id} <span>{food.category}</span> </Header>
       <Info>
       <Image src={food.image || "/food.jpg"} alt={food.name} />
-     
+
         <Title>{food.name}</Title>
         <Desc>재료: {food.ingredients}</Desc>
         <Stat>
           조회수: {food.views}
-          <span>❤️: {food.likes}</span>
+          <span>❤️ {food.likes}</span>
         </Stat>
       </Info>
     </CardWrapper>

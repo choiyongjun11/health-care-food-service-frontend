@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
-import PageLayout from "../components/layout/Pagelayout";
+import PageLayout from "../../components/layout/Pagelayout";
 import { useNavigate } from "react-router-dom";
 
 

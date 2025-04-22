@@ -1,11 +1,14 @@
-import React, { useState } from "react";
 import styled from "styled-components";
-import FoodCard from "../components/Foodcard";
-import PageLayout from "../components/layout/Pagelayout";
+import FoodCard from "../../components/Foodcard";
+import PageLayout from "../../components/layout/Pagelayout";
+import React from "react";
+import { Link } from "react-router-dom";
 
 //전체 음식 데이터를 spring 에서 받아와 카드 목록으로 보여준다.
 //정렬, 검색, 필터링, 좋아요 같은 데이터 중심 로직 처리
 //각 데이터를 FoodCard에 전달하여 렌더링을 위임
+
+//link 를 사용하여 페이지를 이동할 수 있도록 해주자.
 
 //전체 음식 목록 조회
 // 정렬, 검색, 필터링 UI 포함
@@ -41,27 +44,41 @@ const SearchInput = styled.input`
 `;
 
 const Button = styled.button`
+  width: 80px;
+  height: 50px;
   padding: 0.5rem 1rem;
   font-size: 1rem;
   font-weight: bold;
   border-radius: 20px;
+  cursor: pointer;
+  
 `;
 
 const Select = styled.select`
   padding: 1rem;
-
-    font-size: 1rem;
+  font-size: 1rem;
   border-radius: 20px;
+  
 `;
 
 const ContentWrapper = styled.div`
+  
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  
+  min-height: 320px; 
   max-width: 1920px;
   padding: 0 10rem;
   display: grid;
+  flex-direction: column;
+  justify-content: space-between;
+  
   grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
   padding-bottom: 2rem;
-  border-radius: 20px;
+
+  border-bottom: 2px solid;
 
   @media (max-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
@@ -76,10 +93,19 @@ const ContentWrapper = styled.div`
   }
 `;
 
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  font-weight: 500;
+  color: inherit;
+  
+`;
+
 //전체조회를 위해서 상태를 변경해야 합니다. -> useState 사용합니다.
 //spring localhost:8080/foods 에서 feetch 작업
-export default function FoodList() {
-  const [foods, setFoods] = useState([
+
+export default function FoodsPage() {
+  const foods = [
     {
       id: 1,
       name: "그린 샐러드",
@@ -88,7 +114,7 @@ export default function FoodList() {
       image: "/foods/green-salad.jpg",
       views: 920,
       likes: 220
-   
+
     },
     {
       id: 2,
@@ -98,7 +124,7 @@ export default function FoodList() {
       image: "/foods/oatmeal.jpg",
       views: 750,
       likes: 180
- 
+
     },
     {
       id: 3,
@@ -128,7 +154,7 @@ export default function FoodList() {
       image: "/foods/avocado-toast.jpg",
       views: 800,
       likes: 190
- 
+
     },
     {
       id: 6,
@@ -160,8 +186,7 @@ export default function FoodList() {
       likes: 230,
 
     }
-  ]);
-
+  ];
 
   return (
 
@@ -182,14 +207,19 @@ export default function FoodList() {
         <Select>
           <option>조회 순</option>
           <option>좋아요 순</option>
-         
+
         </Select>
       </FilterBar>
 
       <ContentWrapper>
+
         {foods.map((food) => (
-          <FoodCard key={food.id} food={food} />
+          <StyledLink key={food.id} to={`/foods/${food.id}`}>
+            <FoodCard food={food} />
+          </StyledLink>
         ))}
+
+        
       </ContentWrapper>
       
       </PageLayout>
@@ -197,4 +227,5 @@ export default function FoodList() {
 
     
   );
-}
+
+};

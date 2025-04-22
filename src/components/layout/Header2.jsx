@@ -149,7 +149,7 @@ export default function Header () {
           <CenterMenu>
             <MenuLink to="/about">About Us</MenuLink>
             <MenuLink to="/target">Health</MenuLink>
-            <MenuLink to="/foodList">Food</MenuLink>
+            <MenuLink to="/foods">FoodList</MenuLink>
             <MenuLink to="/market">Market</MenuLink>
             <MenuLink to="/analysis">Analysis</MenuLink>
           </CenterMenu>

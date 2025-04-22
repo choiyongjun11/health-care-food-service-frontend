@@ -9,7 +9,7 @@ const Wrapper = styled.section`
   max-width: 1920px;
   
   font-family: 'Noto Sans KR', sans-serif;
-  background-color: #a2de43;
+  //background-color: #a2de43;
 
 
 

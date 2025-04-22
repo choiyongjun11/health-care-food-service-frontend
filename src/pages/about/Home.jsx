@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import PageLayout from "../components/layout/Pagelayout";
+import PageLayout from "../../components/layout/Pagelayout";
 
 
 const Title = styled.div`
