@@ -126,18 +126,19 @@ const MenuToggle = styled.button`
 export default function Header () {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userId, setUsetId] = useState(null);
+  const [userId, setUserId] = useState(null);
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const id = localStorage.getItem("userId"); //로그인 시 저장한 사용자 ID
     setIsLoggedIn(!!token);
-    setUsetId(id);
+    setUserId(id);
 
   }, []);
 
 
-
+  
   return(
     <HeaderContainer>
       <InnerWrapper>
@@ -162,23 +163,25 @@ export default function Header () {
 
         <RightMenu>
         <MenuLink to="/">Home</MenuLink>
-
+  
         {isLoggedIn ? (
-          <>
-            <MenuLink to="/logout">Logout</MenuLink>
-            <MenuLink to="/members">MyPage</MenuLink>
-          </>
+        <>
+        <MenuLink to="/logout">Logout</MenuLink>
+        {userId ? (
+        <MenuLink to={`/members/${userId}`}>MyPage</MenuLink>
+        ) : null}
+        </>
         ) : (
-          <>
-            <MenuLink to="/login">Login</MenuLink>
-            <MenuLink to="/sigin">Sign Up</MenuLink>
-          </>
+        <>
+        <MenuLink to="/login">Login</MenuLink>
+        <MenuLink to="/sigin">Sign Up</MenuLink>
+        </>
         )}
 
         </RightMenu>
 
-      </InnerWrapper>
-    </HeaderContainer>
+        </InnerWrapper>
+        </HeaderContainer>
     
 
   );

@@ -31,14 +31,13 @@ const TabButton = styled.button`
   font-weight: bold;
   width: 50%;
 
-  background-color: ${({ active }) => (active ? "#71B700" : "#eee")};
-  color: ${({ active }) => (active ? "black" : "white")};
+  background-color: ${({ $active }) => ($active ? "#71B700" : "#eee")};
+  color: ${({ $active }) => ($active ? "black" : "white")};
   border: none;
   border-radius: 4px;
-
   cursor: pointer;
   &:hover {
-    background-color: ${({ active }) => (active ? "#5da600" : "#ddd")};
+    background-color: ${({ $active }) => ($active ? "#5da600" : "#ddd")};
   }
 `;
 
@@ -48,9 +47,13 @@ export default function MyPage() {
 
   const [activeTab, setActiveTab] = useState("settings");
   const [userData, setUserData] = useState(null);
-  const { id } = useParams();
+  const id = localStorage.getItem("userId");
+
+  
 
   useEffect(() => {
+    if (!id) return; // id가 없으면 API 요청 막기
+  
     const fetchUser = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/members/${id}`);
@@ -59,6 +62,7 @@ export default function MyPage() {
         console.error("유저 정보 로딩 실패", error);
       }
     };
+  
     fetchUser();
   }, [id]);
 
@@ -69,10 +73,18 @@ export default function MyPage() {
         birthday: updatedUser.birthday,
         phone: updatedUser.phone,
       };
-      await axios.patch(`http://localhost:8080/members/${id}`, payload);
+  
+      console.log("업데이트할 데이터:", payload);
+  
+      const response = await axios.patch(`http://localhost:8080/members/${id}`, payload);
+  
       alert("정보가 저장되었습니다.");
-      setUserData({ ...userData, ...payload });
+      setUserData((prev) => ({
+        ...prev,
+        ...payload,
+      }));
     } catch (error) {
+      console.error("업데이트 실패:", error);
       alert("저장 실패");
     }
   };
@@ -94,8 +106,9 @@ export default function MyPage() {
     <PageLayout>
     <Title>마이페이지</Title>
     <Content>
-      <TabButton active={activeTab === "settings"} onClick={() => setActiveTab("settings")}>설정</TabButton>
-      <TabButton active={activeTab === "activity"} onClick={() => setActiveTab("activity")}>활동 내역</TabButton>
+      
+    <TabButton $active={activeTab === "settings"}>설정</TabButton>
+    <TabButton $active={activeTab === "activity"}>활동 내역</TabButton>
 
       {activeTab === "settings" && userData && (
         <UserSettings

@@ -56,7 +56,8 @@ const Button = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
-  background-color: ${({ variant }) => (variant === "danger" ? "#e74c3c" : "#71B700")};
+  background-color: ${({ $variant }) =>
+    $variant === "danger" ? "#e74c3c" : "#71B700"};
   color: white;
   margin-right: 0.5rem;
 
@@ -93,6 +94,8 @@ export default function UserSettings({ userData, onUpdateUser, onDeleteUser }) {
   };
 
   if (!editableUser) return <Container>사용자 정보를 불러오는 중입니다...</Container>;
+
+  
 
   return (
     <Container>
@@ -139,17 +142,23 @@ export default function UserSettings({ userData, onUpdateUser, onDeleteUser }) {
       <Card>
         <SectionTitle style={{ color: "#e74c3c" }}>계정 삭제</SectionTitle>
         <Input
-          placeholder="회원탈퇴 입력"
+          placeholder="'회원탈퇴' 입력하시오."
           value={deleteConfirm}
           onChange={(e) => setDeleteConfirm(e.target.value)}
         />
+
         <Button
-          variant="danger"
-          onClick={onDeleteUser}
+          $variant="danger"
+          onClick={() => {
+            if (window.confirm("정말로 계정을 삭제하시겠습니까?")) {
+              onDeleteUser();
+            }
+          }}
           disabled={deleteConfirm !== "회원탈퇴"}
         >
           계정 삭제
         </Button>
+
       </Card>
     </Container>
   );

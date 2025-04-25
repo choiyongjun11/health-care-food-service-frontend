@@ -179,7 +179,7 @@ export default function Sigin() {
     <FormGroup>
         <Label htmlFor="username">이름(홍길동)</Label>
         <Input
-        id="username"
+        id="name"
         type="text"
         placeholder="이름"
         value={name}

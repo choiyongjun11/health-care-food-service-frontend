@@ -2,7 +2,7 @@ import styled from "styled-components";
 import FoodCard from "../../components/Foodcard";
 import PageLayout from "../../components/layout/Pagelayout";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { data, Link } from "react-router-dom";
 import axios from "axios";
 
 const Title = styled.h1`
@@ -74,25 +74,72 @@ const StyledLink = styled(Link)`
   display: block;
 `;
 
+const PaginationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+`;
+
+const PageButton = styled.button`
+  padding: 0.5rem 1rem;
+  background-color: ${({ active }) => (active ? "#333" : "#eee")};
+  color: ${({ active }) => (active ? "#fff" : "#000")};
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+
 export default function FoodsPage() {
   const [foods, setFoods] = useState([]);
+  const [pageInfo, setPageInfo] = useState({ page: 0, totalPages: 0 });
+  const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("전체");
+
+  const fetchFoods = async (page = 0) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`http://localhost:8080/foods?page=${page + 1}&size=10`);
+      setFoods(response.data.data);
+      setPageInfo(response.data.pageInfo);
+      setCurrentPage(page);
+    } catch (err) {
+      console.error("데이터를 가져오지 못했습니다.", err);
+      setError("데이터를 가져오지 못했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchFoods = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/foods?page=1&size=10");
-        setFoods(response.data.data);
-        setLoading(false);
-      } catch (err) {
-        setError("데이터를 가져오지 못했습니다.");
-        setLoading(false);
-      }
-    };
-
-    fetchFoods();
+    fetchFoods(0);
   }, []);
+
+
+  const Pagination = () => {
+    const pages = Array.from({ length: pageInfo.totalPages }, (_, i) => i);
+    return (
+      <PaginationWrapper>
+        {pages.map((page) => (
+          <PageButton
+            key={page}
+            active={page === currentPage}
+            onClick={() => fetchFoods(page)}
+          >
+            {page + 1}
+          </PageButton>
+        ))}
+      </PaginationWrapper>
+    );
+  };
+
+    const filteredFoods = selectedCategory === "전체"
+    ? foods
+    : foods.filter((food) => food.foodCategory === selectedCategory);
+
 
   if (loading) {
     return (
@@ -116,13 +163,17 @@ export default function FoodsPage() {
       <FilterBar>
         <SearchInput placeholder="음식명 또는 재료로 검색" />
         <Button>검색</Button>
-        <Select>
+        <Select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
           <option>전체</option>
-          <option>한식</option>
-          <option>육류</option>
           <option>국/탕/찌개</option>
-          <option>간식</option>
+          <option>밥</option>
+          <option>면</option>
+          <option>메인요리/반찬</option>
+          <option>육류</option>
           <option>샐러드/디저트</option>
+          <option>구황작물</option>
+          <option>음료</option>
+          
         </Select>
 
         <Select>
@@ -132,12 +183,16 @@ export default function FoodsPage() {
       </FilterBar>
 
       <ContentWrapper>
-        {foods.map((food) => (
-          <StyledLink key={food.id} to={`/foods/${food.id}`}>
-            <FoodCard food={food} />
-          </StyledLink>
-        ))}
-      </ContentWrapper>
+      {filteredFoods.map((food) => (
+        <StyledLink to={`/foods/${food.foodId}`} key={food.foodId}>
+          <FoodCard food={food} />
+        </StyledLink>
+      ))}
+
+    </ContentWrapper>
+
+      <Pagination />
+
     </PageLayout>
   );
 }

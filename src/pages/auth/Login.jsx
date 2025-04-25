@@ -110,17 +110,24 @@ export default function Login () {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [saveId, setSaveId] = useState(false); //id 저장
+  const [errorMessage, setErrorMessage] = useState(''); //에러 메시지 상태 구현
+  const navigate = useNavigate(); //페이지 이동 훅 선언
+
+
 
   const isActive = email.trim() !== "" && password.trim() !== "";
 
-  const navigate = useNavigate(); //페이지 이동 훅 선언
-
-  const [errorMessage, setErrorMessage] = useState(''); //에러 메시지 상태 구현
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/", { replace: true }); // 뒤로가기 stack에 안 남김!
+      navigate("/", { replace: true }); //뒤로 가기 누르게 하기
+    }
+
+    const savedEmail = localStorage.getItem("savedEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setSaveId(true);
     }
   }, [navigate]);
 
@@ -149,19 +156,24 @@ export default function Login () {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-
-  const loginData = {
-    email,
-    password
-  };
+  const loginData = { email, password };
 
   try {
     const response = await axios.post ("http://localhost:8080/auth/login", loginData);
+    console.log("로그인 응답:", response.data);
 
-    //jwt 저장 
-    localStorage.setItem("token", response.data.token);
-    localStorage.setItem("userName", response.data.name);
+    // 응답 구조에 따라 유연하게 처리
+    const data = response.data?.data ?? response.data;
+    const { token, email: userEmail, memberId } = data;
+    
+    if (!memberId) {
+    throw new Error("응답에 사용자 ID가 없습니다.");
+    }
 
+      // 로컬스토리지에 저장
+    localStorage.setItem("token", token);
+    localStorage.setItem("email", userEmail);
+    localStorage.setItem("userId", memberId.toString());
 
 
     alert("로그인 완료");
@@ -175,7 +187,6 @@ export default function Login () {
   }
 
 };
-
 
     return (
     <Container>

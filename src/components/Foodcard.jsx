@@ -77,14 +77,14 @@ export default function FoodCard({ food }) {
 
   return (
     <CardWrapper>
-      <Header>No.{food.id} <span>{food.category}</span> </Header>
+      <Header>No.{food.foodId} <span>{food.foodCategory}</span> </Header>
       <Info>
-        <Image src={food.image} alt={food.name} />
-        <Title>{food.name}</Title>
-        <Desc>{Array.isArray(food.ingredients)? food.ingredients.join(", "): food.ingredients} </Desc>
+        <Image src={food.foodImageUrl} alt={food.foodName} />
+        <Title>{food.foodName}</Title>
+        <Desc>{Array.isArray(food.foodIngredients)? food.ingredients.join(", "): food.foodIngredients} </Desc>
         <Stat>
-          조회수: {food.view}
-          <span>❤️ {food.likes}</span>
+          조회수: {food.viewCount}
+          <span>❤️ {food.likeCount}</span>
         </Stat>
       </Info>
     </CardWrapper>
