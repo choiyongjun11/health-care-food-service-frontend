@@ -7,13 +7,22 @@ import styled from "styled-components";
 //카드 클릭 시 상세 페이지로 이동 하기
 
 const CardWrapper = styled.div`
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 100%;
+  min-height: 320px;
   border: 3px solid black;
   border-radius: 8px;
-  overflow: hidden;
   background-color: white;
-  //min-height: 320px; 이미지 삽입 시 해제
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
 
+  &:hover {
+    transform: scale(1.02);
+  }
+  
 `;
 
 
@@ -49,8 +58,11 @@ const Title = styled.h3`
 const Desc = styled.p`
   font-size: 0.9rem;
   color: #878686;
-  white-space: normal;
-  overflow-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; // 3줄까지만 표시
+  -webkit-box-orient: vertical;
 `;
 
 const Stat = styled.div`
@@ -63,17 +75,15 @@ const Stat = styled.div`
 
 export default function FoodCard({ food }) {
 
-
   return (
     <CardWrapper>
       <Header>No.{food.id} <span>{food.category}</span> </Header>
       <Info>
-      <Image src={food.image || "/food.jpg"} alt={food.name} />
-
+        <Image src={food.image} alt={food.name} />
         <Title>{food.name}</Title>
-        <Desc>재료: {food.ingredients}</Desc>
+        <Desc>{Array.isArray(food.ingredients)? food.ingredients.join(", "): food.ingredients} </Desc>
         <Stat>
-          조회수: {food.views}
+          조회수: {food.view}
           <span>❤️ {food.likes}</span>
         </Stat>
       </Info>

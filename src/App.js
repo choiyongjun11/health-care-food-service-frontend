@@ -12,8 +12,9 @@ import Logout from './pages/auth/Logout';
 import Mypage from './pages/people/Mypage';
 
 import FoodPage from './pages/foods/page';
-import FoodDetailPage from './pages/foods/[id]/fooddetailpage';
+import FoodDetailPage from './pages/foods/fooddetailpage';
 
+import FoodDetailInfo from './components/Fooddetailinfo';
 
 
 function App() {
@@ -26,15 +27,17 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/sigin" element={<Sigin />} />
 
-        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/members/:id" element={<Mypage />} />
         <Route path="/logout" element={<Logout />} />
 
         <Route path="/about" element={<About />} /> 
         <Route path="/target" element={<Health />} />
+
         <Route path="/foods" element={<FoodPage />} />
         <Route path="/foods/:id" element={<FoodDetailPage />} />
         <Route path="/market" element={<Market />} />
         <Route path="/analysis" element={<Analysis/>} />
+        <Route path="/test" element= {<FoodDetailInfo/>} />
 
 
       </Routes>

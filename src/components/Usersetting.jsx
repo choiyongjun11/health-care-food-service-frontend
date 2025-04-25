@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+
 import styled from "styled-components";
+
+//ui 만 담당합니다.
 
 const Container = styled.div`
   max-width: 1200px;
@@ -68,225 +71,82 @@ const Text = styled.p`
   color: #333;
 `;
 
-export default function UserSettings() {
-  const [userData, setUserData] = useState(null);
-  const [password, setPassword] = useState({
-    current: "",
-    new: "",
-    confirm: "",
-  });
+export default function UserSettings({ userData, onUpdateUser, onDeleteUser }) {
+  const [editableUser, setEditableUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState("");
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const email = localStorage.getItem("email");
-      try {
-        const response = await fetch(`http://localhost:3001/users?email=${email}`);
-        const result = await response.json();
-        if (result.length > 0) {
-          const user = result[0];
-          setUserData({
-            id: user.id,
-            email: user.email,
-            password: user.password,
-            username: user.username,
-            birthday: user.birthday,
-            phoneNumber: user.phoneNumber,
-          });
-        }
-      } catch (error) {
-        console.error("사용자 정보 가져오기 실패", error);
-      }
-    };
-    fetchUser();
-  }, []);
+    setEditableUser(userData);
+  }, [userData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserData((prev) => ({ ...prev, [name]: value }));
+    setEditableUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePasswordChange = (e) => {
-    const { name, value } = e.target;
-    setPassword((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSave = async () => {
-    try {
-      const response = await fetch(`http://localhost:3001/users/${userData.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        alert("사용자 정보가 성공적으로 저장되었습니다.");
-        setIsEditing(false);
-      } else {
-        alert("저장에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("저장 실패", error);
-      alert("서버 오류가 발생했습니다.");
+  const handleSave = () => {
+    if (editableUser) {
+      onUpdateUser(editableUser);
+      setIsEditing(false);
     }
   };
 
-  const handleChangePassword = async () => {
-    if (password.new !== password.confirm) {
-      alert("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
-      return;
-    }
-if (password.current.trim() !== String(userData.password).trim()) {
-  alert("현재 비밀번호가 올바르지 않습니다.");
-  return;
-}
-
-    try {
-      const updatedUser = {
-        ...userData,
-        password: password.new,
-      };
-
-      const response = await fetch(`http://localhost:3001/users/${userData.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedUser),
-      });
-
-      if (response.ok) {
-        alert("비밀번호가 성공적으로 변경되었습니다.");
-        setUserData(updatedUser);
-        setPassword({ current: "", new: "", confirm: "" });
-      } else {
-        alert("비밀번호 변경 실패");
-      }
-    } catch (error) {
-      console.error("비밀번호 변경 실패", error);
-      alert("서버 오류로 비밀번호 변경에 실패했습니다.");
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    if (deleteConfirmation === "회원탈퇴") {
-      try {
-        const response = await fetch(`http://localhost:3001/users/${userData.id}`, {
-          method: "DELETE",
-        });
-        if (response.ok) {
-          alert("계정이 삭제되었습니다.");
-          localStorage.clear();
-          window.location.href = "/";
-        } else {
-          alert("계정 삭제에 실패했습니다.");
-        }
-      } catch (error) {
-        console.error("계정 삭제 실패", error);
-      }
-    }
-  };
-
-  if (!userData) return <Container>사용자 정보를 불러오는 중...</Container>;
+  if (!editableUser) return <Container>사용자 정보를 불러오는 중입니다...</Container>;
 
   return (
     <Container>
+      {/* 개인 정보 */}
       <Card>
-        <SectionTitle>개인 정보 설정</SectionTitle>
-        <Description>계정 정보를 확인하고 수정할 수 있습니다.</Description>
+        <SectionTitle>개인 정보</SectionTitle>
+        <Label>이름</Label>
+        {isEditing ? (
+          <Input name="name" value={editableUser.name} onChange={handleChange} />
+        ) : (
+          <Text>{editableUser.name}</Text>
+        )}
 
-        <InputGroup>
-          <Label htmlFor="username">이름</Label>
-          {isEditing ? (
-            <Input id="username" name="username" value={userData.username} onChange={handleChange} />
-          ) : (
-            <Text>{userData.username}</Text>
-          )}
-        </InputGroup>
+        <Label>생년월일</Label>
+        {isEditing ? (
+          <Input
+            name="birthday"
+            type="date"
+            value={editableUser.birthday}
+            onChange={handleChange}
+          />
+        ) : (
+          <Text>{editableUser.birthday}</Text>
+        )}
 
-        <InputGroup>
-          <Label htmlFor="birthday">생년월일</Label>
-          {isEditing ? (
-            <Input
-              id="birthday"
-              name="birthday"
-              type="date"
-              value={userData.birthday}
-              onChange={handleChange}
-            />
-          ) : (
-            <Text>{userData.birthday}</Text>
-          )}
-        </InputGroup>
-
-        <InputGroup>
-          <Label htmlFor="phoneNumber">휴대전화번호</Label>
-          {isEditing ? (
-            <Input id="phoneNumber" name="phoneNumber" value={userData.phoneNumber} onChange={handleChange} />
-          ) : (
-            <Text>{userData.phoneNumber}</Text>
-          )}
-        </InputGroup>
+        <Label>전화번호</Label>
+        {isEditing ? (
+          <Input name="phone" value={editableUser.phone} onChange={handleChange} />
+        ) : (
+          <Text>{editableUser.phone}</Text>
+        )}
 
         {isEditing ? (
           <>
-            <Button onClick={() => setIsEditing(false)}>취소</Button>
             <Button onClick={handleSave}>저장</Button>
+            <Button onClick={() => setIsEditing(false)}>취소</Button>
           </>
         ) : (
           <Button onClick={() => setIsEditing(true)}>정보 수정</Button>
         )}
       </Card>
 
-      <Card>
-        <SectionTitle>비밀번호 변경</SectionTitle>
-        <Description>계정 보안을 위해 주기적으로 비밀번호를 변경해주세요.</Description>
-
-        <InputGroup>
-          <Label htmlFor="current">현재 비밀번호</Label>
-          <Input
-            id="current"
-            name="current"
-            type="password"
-            value={password.current}
-            onChange={handlePasswordChange}
-          />
-        </InputGroup>
-
-        <InputGroup>
-          <Label htmlFor="new">새 비밀번호</Label>
-          <Input id="new" name="new" type="password" value={password.new} onChange={handlePasswordChange} />
-        </InputGroup>
-
-        <InputGroup>
-          <Label htmlFor="confirm">비밀번호 확인</Label>
-          <Input id="confirm" name="confirm" type="password" value={password.confirm} onChange={handlePasswordChange} />
-        </InputGroup>
-
-        <Button onClick={handleChangePassword}>비밀번호 변경</Button>
-      </Card>
-
+      {/* 계정 삭제 */}
       <Card>
         <SectionTitle style={{ color: "#e74c3c" }}>계정 삭제</SectionTitle>
-        <Description>계정을 삭제하면 모든 데이터가 영구적으로 제거되며 복구할 수 없습니다.</Description>
-
-        <InputGroup>
-          <Label htmlFor="confirmDelete">'회원탈퇴' 입력</Label>
-          <Input
-            id="confirmDelete"
-            value={deleteConfirmation}
-            onChange={(e) => setDeleteConfirmation(e.target.value)}
-            placeholder="회원탈퇴"
-          />
-        </InputGroup>
-
+        <Input
+          placeholder="회원탈퇴 입력"
+          value={deleteConfirm}
+          onChange={(e) => setDeleteConfirm(e.target.value)}
+        />
         <Button
           variant="danger"
-          onClick={handleDeleteAccount}
-          disabled={deleteConfirmation !== "회원탈퇴"}
+          onClick={onDeleteUser}
+          disabled={deleteConfirm !== "회원탈퇴"}
         >
           계정 삭제
         </Button>

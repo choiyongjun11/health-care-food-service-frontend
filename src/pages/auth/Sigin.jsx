@@ -1,6 +1,8 @@
-import React, { useState, useRef } from "react"; //state -상태변경, useRef - 자동 포커스
+import React, { useState, useRef, useEffect } from "react"; //state -상태변경, useRef - 자동 포커스
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom"; //화면 이동
+import axios from "axios";
+import { ChartArea } from "lucide-react";
 
 const Container = styled.div`
   max-width: 600px;
@@ -66,21 +68,21 @@ export default function Sigin() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
+  const [name, setUsername] = useState('');
   const [birthday, setBirthday] = useState('');
 
   //전화번호 각 필드 자동 포커스 이동 기능
   const [tel1, setTel1] = useState("010");
   const [tel2, setTel2] = useState("");
   const [tel3, setTel3] = useState("");
-  const phoneNumber = `${tel1}-${tel2}-${tel3}`;
+  const phone = `${tel1}-${tel2}-${tel3}`;
 
   const tel2Ref = useRef(null); //자동 포커스
   const tel3Ref = useRef(null);
 
   //필드에 값 입력 시 버튼 색상 활성화 기능
   const isActive = email.trim() !== "" && password.trim() !== "" &&
-  username.trim() !== "" && birthday.trim() !=="";
+  name.trim() !== "" && birthday.trim() !=="";
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value); // 사용자가 입력한 email 값을 상태에 저장
@@ -120,64 +122,25 @@ export default function Sigin() {
     setTel3(value);
   };
 
-
-  //const handleSubmit = async (e) => {
-   // e.preventDefault();
-      
-    // 회원가입 처리 로직 실행 fetch POST 요청 보내기 → 회원 저장
-    //스프링 연동 시 아래 주석 해제하자.
-    // try {
-    //   const request = await fetch("http://localhost:8080/signup", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     // 회원가입 폼 데이터
-    //     body: JSON.stringify({email, password,username, birthday, phoneNumber}), 
-    //   });
-
-    //   if (request.ok) {
-    //     // 성공 시 로그인 페이지로 이동
-    //     navigate("/login");
-    //   } else {
-    //     const result = await request.json();
-    //     alert(result.message || "회원가입 실패");
-    //   }
-    // } catch (error) {
-    //   console.error("회원가입 실패", error.message);
-    //   alert("정보를 다시 입력해주세요.");
-    // }
-
-  //  };
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    try {
-      const request = await fetch("http://localhost:3001/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          username,
-          birthday,
-          phoneNumber,
-        }),
-      });
+    const signupData = {
+      email,
+      password,
+      name,
+      birthday,
+      phone,
+    };
   
-      if (request.ok) {
-        console.log("회원가입 성공! (json-server)");
-        navigate("/login");
-      } else {
-        alert("회원가입 실패 (json-server)");
-      }
+    try {
+      const response = await axios.post("http://localhost:8080/members", signupData);
+  
+      alert("회원가입이 완료되었습니다.");
+      navigate("/login");
     } catch (error) {
-      console.error("에러 발생:", error);
-      alert("서버 연결 실패");
+      console.error("회원가입 실패: ", error);
+      alert("회원가입에 실패하였습니다. 다시 시도해 주십시오");
     }
   };
 
@@ -186,7 +149,7 @@ export default function Sigin() {
     <Container>
 
       <Title>회원가입</Title>
-    <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
 
     <FormGroup>
       <Label htmlFor="email">이메일 아이디(6~12자, 영문·숫자 사용 가능)</Label>
@@ -219,7 +182,7 @@ export default function Sigin() {
         id="username"
         type="text"
         placeholder="이름"
-        value={username}
+        value={name}
         onChange={handleUsernameChange}
         />
       
@@ -244,7 +207,7 @@ export default function Sigin() {
       <Input id="tel3" type="text" maxLength={4} value={tel3} ref={tel3Ref} onChange={handleTel3Change}/>
 
       {/* 확인용 */}
-      <p style={{ marginTop: "10px", fontWeight: "bold" }}>입력된 번호: {phoneNumber}</p>
+      <p style={{ marginTop: "10px", fontWeight: "bold" }}>입력된 번호: {phone}</p>
     </FormGroup>
 
       <Button type="submit" disabled={!isActive} >회원가입 완료</Button>

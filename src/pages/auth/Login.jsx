@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
-
+import axios from "axios";
 const Container = styled.div`
   max-width: 400px;
   margin: 5rem auto;
@@ -115,7 +115,7 @@ export default function Login () {
 
   const navigate = useNavigate(); //페이지 이동 훅 선언
 
-  const [errorMesage, setErrorMessage] = useState(''); //에러 메시지 상태 구현
+  const [errorMessage, setErrorMessage] = useState(''); //에러 메시지 상태 구현
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -135,84 +135,46 @@ export default function Login () {
     setPassword(e.target.value); //사용자가 입력한 password 값을 상태에 저장
   };
 
+  //아이디 저장 기능
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("savedEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setSaveId(true);
+    }
+  }, []);
 
   //4. 로그인 폼을 제출할 때 실행되는 함수입니다.
   //브라우저 기본 동작을 막고, 현재 상태(email, password)를 확인 해보는 용도입니다.
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault(); // 새로고침 방지
-  //   console.log("이메일:", email);
-  //   console.log("비밀번호:", password);
-  
-  //   const loginData = {
-  //     email: email,
-  //     password: password,
-  //   };
-  
-  //   try {
-  //     const response = await fetch("http://localhost:8080/login", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(loginData),
-  //     });
-  
-  //     const result = await response.json();
-  
-  //     if (!response.ok) {
-  //       // 실패 응답이면 예외 처리
-  //       throw new Error(result.message || "아이디 또는 비밀번호가 올바르지 않습니다.");
-  //     }
-  
-  //     // 로그인 성공
-  //     console.log("로그인 성공", result);
-  //     localStorage.setItem("token", result.token); // JWT
-  //     localStorage.setItem("userName", result.name); // 사용자 이름
-  //     navigate("/");
-  
-  //   } catch (error) {
-  //     console.error("로그인 실패", error.message);
-  //     setEmail("");
-  //     setPassword("");
-  //     setErrorMessage(
-  //       "아이디 또는 비밀번호가 잘못 되었습니다.\n아이디와 비밀번호를 정확히 입력해 주세요."
-  //     );
-  //   }
-  // };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
   
 
-    const handleSubmit = async (e) => {
-      e.preventDefault(); //페이지 새로고침 방지
+  const loginData = {
+    email,
+    password
+  };
 
-      try {
-        const request = await fetch(`http://localhost:3001/users?email=${email}&password=${password}`);
-        const result = await request.json();
-      
-        // 실패한 경우 (유저가 없을 때)
-        if (result.length === 0) {
-          setEmail("");
-          setPassword("");
-          setErrorMessage(
-            "아이디 또는 비밀번호가 잘못 되었습니다.\n아이디와 비밀번호를 정확히 입력해 주세요."
-          );
-          return; // 더 이상 진행하지 않음
-        }
-      
-        // 성공한 경우
-        const user = result[0];
-        localStorage.setItem("token", user.token || "mock-token");
-        localStorage.setItem("userName", user.username);
-        localStorage.setItem("email", user.email);
-        navigate("/");
-      
-      } catch (error) {
-        // 네트워크 에러, 서버 꺼짐 등
-        console.error("서버 오류 발생", error.message);
-        setErrorMessage("서버에 연결할 수 없습니다. 나중에 다시 시도해 주세요.");
-      }
-      
-    };
+  try {
+    const response = await axios.post ("http://localhost:8080/auth/login", loginData);
+
+    //jwt 저장 
+    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("userName", response.data.name);
+
+
+
+    alert("로그인 완료");
+    navigate("/");
+
+  } catch (error) {
+    console.error("로그인 실패: ", error);
+    setEmail("");
+    setPassword("");
+    setErrorMessage("아이디 또는 비밀번호가 잘못되었습니다.\n 아이디와 비밀번호를 다시 입력해주세요");
+  }
+
+};
 
 
     return (
@@ -244,9 +206,9 @@ export default function Login () {
       />
 
 
-      {errorMesage && ( 
+      {errorMessage && ( 
       <ErrorMessage>
-      {errorMesage.split("\n").map((line, index) => (
+      {errorMessage.split("\n").map((line, index) => (
         <React.Fragment key = {index}>
           {line}
           <br />

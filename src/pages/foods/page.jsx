@@ -1,28 +1,16 @@
 import styled from "styled-components";
 import FoodCard from "../../components/Foodcard";
 import PageLayout from "../../components/layout/Pagelayout";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-//전체 음식 데이터를 spring 에서 받아와 카드 목록으로 보여준다.
-//정렬, 검색, 필터링, 좋아요 같은 데이터 중심 로직 처리
-//각 데이터를 FoodCard에 전달하여 렌더링을 위임
-
-//link 를 사용하여 페이지를 이동할 수 있도록 해주자.
-
-//전체 음식 목록 조회
-// 정렬, 검색, 필터링 UI 포함
-// 음식에 대한 정보 조회만 가능, 조회수/좋아요 수 조작 불가
-// 각 아이템은 foodCard 로 렌더링
+import axios from "axios";
 
 const Title = styled.h1`
   font-size: 2.5rem;
   font-weight: bold;
   margin: 0 auto;
-
   padding: 0 10rem;
   padding-top: 2rem;
-  
 `;
 
 const FilterBar = styled.div`
@@ -33,7 +21,6 @@ const FilterBar = styled.div`
   flex-wrap: wrap;
   margin-top: 2rem;
   margin-bottom: 2rem;
-
 `;
 
 const SearchInput = styled.input`
@@ -51,34 +38,22 @@ const Button = styled.button`
   font-weight: bold;
   border-radius: 20px;
   cursor: pointer;
-  
 `;
 
 const Select = styled.select`
   padding: 1rem;
   font-size: 1rem;
   border-radius: 20px;
-  
 `;
 
 const ContentWrapper = styled.div`
-  
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  
-  min-height: 320px; 
-  max-width: 1920px;
-  padding: 0 10rem;
   display: grid;
-  flex-direction: column;
-  justify-content: space-between;
-  
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
-  padding-bottom: 2rem;
-
-  border-bottom: 2px solid;
+  justify-content: center;
+  padding: 2rem 10rem;
+  max-width: 1200px;
+  margin: 0 auto;
 
   @media (max-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
@@ -93,103 +68,49 @@ const ContentWrapper = styled.div`
   }
 `;
 
-
 const StyledLink = styled(Link)`
   text-decoration: none;
-  font-weight: 500;
   color: inherit;
-  
+  display: block;
 `;
 
-//전체조회를 위해서 상태를 변경해야 합니다. -> useState 사용합니다.
-//spring localhost:8080/foods 에서 feetch 작업
-
 export default function FoodsPage() {
-  const foods = [
-    {
-      id: 1,
-      name: "그린 샐러드",
-      category: "샐러드/디저트",
-      ingredients: "양상추, 시금치, 오이, 토마토, 올리브 오일",
-      image: "/foods/green-salad.jpg",
-      views: 920,
-      likes: 220
+  const [foods, setFoods] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    },
-    {
-      id: 2,
-      name: "오트밀",
-      category: "샐러드/디저트",
-      ingredients: "귀리, 우유, 바나나, 블루베리, 견과류",
-      image: "/foods/oatmeal.jpg",
-      views: 750,
-      likes: 180
+  useEffect(() => {
+    const fetchFoods = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/foods?page=1&size=10");
+        setFoods(response.data.data);
+        setLoading(false);
+      } catch (err) {
+        setError("데이터를 가져오지 못했습니다.");
+        setLoading(false);
+      }
+    };
 
-    },
-    {
-      id: 3,
-      name: "소고기 스테이크",
-      category: "육류",
-      ingredients: "소고기, 브로콜리, 방울토마토, 아스파라거스",
-      image: "/foods/steak.jpg",
-      views: 860,
-      likes: 205
+    fetchFoods();
+  }, []);
 
-    },
-    {
-      id: 4,
-      name: "된장찌개",
-      category: "국/탕/찌개",
-      ingredients: "된장, 두부, 대파, 마늘, 멸치육수",
-      image: "/foods/salmon-steak.jpg",
-      views: 980,
-      likes: 265
-  
-    },
-    {
-      id: 5,
-      name: "아보카도 토스트",
-      category: "간식",
-      ingredients: "통밀빵, 아보카도, 토마토, 올리브 오일",
-      image: "/foods/avocado-toast.jpg",
-      views: 800,
-      likes: 190
+  if (loading) {
+    return (
+      <PageLayout>
+        <div style={{ textAlign: "center", padding: "2rem" }}>불러오는 중...</div>
+      </PageLayout>
+    );
+  }
 
-    },
-    {
-      id: 6,
-      name: "채소 볶음밥",
-      category: "한식",
-      ingredients: "현미, 브로콜리, 당근, 피망, 계란",
-      image: "/foods/veggie-fried-rice.jpg",
-      views: 1050,
-      likes: 275
-
-    },
-    {
-      id: 7,
-      name: "콩불 샐러드",
-      category: "샐러드/디저트",
-      ingredients: "두부, 병아리콩, 적양배추, 올리브 오일",
-      image: "/foods/chickpea-salad.jpg",
-      views: 680,
-      likes: 155
-  
-    },
-    {
-      id: 8,
-      name: "그릭 요거트 볼",
-      category: "샐러드/디저트",
-      ingredients: "그릭 요거트, 블루베리, 그래놀라, 꿀",
-      image: "/foods/greek-yogurt.jpg",
-      views: 890,
-      likes: 230,
-
-    }
-  ];
+  if (error) {
+    return (
+      <PageLayout>
+        <div style={{ textAlign: "center", color: "red", padding: "2rem" }}>{error}</div>
+      </PageLayout>
+    );
+  }
 
   return (
-
     <PageLayout>
       <Title>음식 목록</Title>
       <FilterBar>
@@ -207,25 +128,16 @@ export default function FoodsPage() {
         <Select>
           <option>조회 순</option>
           <option>좋아요 순</option>
-
         </Select>
       </FilterBar>
 
       <ContentWrapper>
-
         {foods.map((food) => (
           <StyledLink key={food.id} to={`/foods/${food.id}`}>
             <FoodCard food={food} />
           </StyledLink>
         ))}
-
-        
       </ContentWrapper>
-      
-      </PageLayout>
-
-
-    
+    </PageLayout>
   );
-
-};
+}

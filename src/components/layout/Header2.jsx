@@ -126,12 +126,17 @@ const MenuToggle = styled.button`
 export default function Header () {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUsetId] = useState(null);
 
-    // 로그인 상태 감지
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-      setIsLoggedIn(!!token);
-    }, []);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const id = localStorage.getItem("userId"); //로그인 시 저장한 사용자 ID
+    setIsLoggedIn(!!token);
+    setUsetId(id);
+
+  }, []);
+
+
 
   return(
     <HeaderContainer>
@@ -161,7 +166,7 @@ export default function Header () {
         {isLoggedIn ? (
           <>
             <MenuLink to="/logout">Logout</MenuLink>
-            <MenuLink to="/mypage">MyPage</MenuLink>
+            <MenuLink to="/members">MyPage</MenuLink>
           </>
         ) : (
           <>

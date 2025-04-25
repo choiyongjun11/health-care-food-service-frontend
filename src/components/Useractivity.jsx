@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+
+//ui 만 구현하자.
+
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
