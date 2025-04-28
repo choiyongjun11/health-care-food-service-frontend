@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Menu } from "lucide-react";
-import logo from '../../assets/ph_plant.png';
+import logo from '../images/ph_plant.png';
 
 const HeaderContainer = styled.header`
   width: 100%;

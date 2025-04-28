@@ -49,9 +49,9 @@ const Select = styled.select`
 const ContentWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
+  gap: 1rem;
   justify-content: center;
-  padding: 2rem 10rem;
+  padding: 1rem 10rem;
   max-width: 1200px;
   margin: 0 auto;
 
@@ -90,7 +90,6 @@ const PageButton = styled.button`
   cursor: pointer;
 `;
 
-
 export default function FoodsPage() {
   const [foods, setFoods] = useState([]);
   const [pageInfo, setPageInfo] = useState({ page: 0, totalPages: 0 });
@@ -115,9 +114,8 @@ export default function FoodsPage() {
   };
 
   useEffect(() => {
-    fetchFoods(0);
+    fetchFoods();
   }, []);
-
 
   const Pagination = () => {
     const pages = Array.from({ length: pageInfo.totalPages }, (_, i) => i);
@@ -136,10 +134,9 @@ export default function FoodsPage() {
     );
   };
 
-    const filteredFoods = selectedCategory === "전체"
+  const filteredFoods = selectedCategory === "전체"
     ? foods
     : foods.filter((food) => food.foodCategory === selectedCategory);
-
 
   if (loading) {
     return (
@@ -173,7 +170,6 @@ export default function FoodsPage() {
           <option>샐러드/디저트</option>
           <option>구황작물</option>
           <option>음료</option>
-          
         </Select>
 
         <Select>
@@ -183,16 +179,15 @@ export default function FoodsPage() {
       </FilterBar>
 
       <ContentWrapper>
-      {filteredFoods.map((food) => (
-        <StyledLink to={`/foods/${food.foodId}`} key={food.foodId}>
-          <FoodCard food={food} />
-        </StyledLink>
-      ))}
-
-    </ContentWrapper>
+        {filteredFoods.map((food) => (
+          <StyledLink to={`/foods/${food.foodId}`} key={food.foodId}>
+            <FoodCard food={food} />
+          </StyledLink>
+        ))}
+      </ContentWrapper>
 
       <Pagination />
-
     </PageLayout>
   );
+
 }

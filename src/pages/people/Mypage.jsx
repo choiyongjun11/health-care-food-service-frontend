@@ -106,24 +106,25 @@ export default function MyPage() {
     <PageLayout>
     <Title>마이페이지</Title>
     <Content>
-      
-    <TabButton $active={activeTab === "settings"}>설정</TabButton>
-    <TabButton $active={activeTab === "activity"}>활동 내역</TabButton>
+  <TabButton
+    $active={activeTab === "settings"} onClick={() => setActiveTab("settings")}>
+    설정
+  </TabButton>
+  <TabButton
+    $active={activeTab === "activity"} onClick={() => setActiveTab("activity")}>
+    활동 내역
+  </TabButton>
 
-      {activeTab === "settings" && userData && (
-        <UserSettings
-          userData={userData}
-          onUpdateUser={handleUpdateUser}
-          onDeleteUser={handleDeleteUser}
-        />
-      )}
+  {activeTab === "settings" && userData && (
+    <UserSettings
+      userData={userData}
+      onUpdateUser={handleUpdateUser}
+      onDeleteUser={handleDeleteUser}
+    />
+  )}
 
-
-      {activeTab === "activity" && <UserActivity />}
-    
-    
-    
-    </Content>
+  {activeTab === "activity" && <UserActivity />}
+</Content>
   </PageLayout>
 
 
