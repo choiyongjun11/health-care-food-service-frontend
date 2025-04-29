@@ -96,7 +96,10 @@ export default function FoodsPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [selectedLike, setSelectedLike] = useState("전체");
+
 
   const fetchFoods = async (page = 0) => {
     try {
@@ -135,8 +138,28 @@ export default function FoodsPage() {
   };
 
   const filteredFoods = selectedCategory === "전체"
-    ? foods
-    : foods.filter((food) => food.foodCategory === selectedCategory);
+  ? foods
+  : foods.filter((food) => food.foodCategory === selectedCategory);
+
+
+    const sortedFoods = [...filteredFoods].sort((a, b) => {
+      if (selectedLike === "조회 순") {
+        return b.viewCount - a.viewCount; // 조회수가 높은 순
+      } else if (selectedLike === "좋아요 순") {
+        return b.likeCount - a.likeCount; // 좋아요가 높은 순
+      } else {
+        return 0; 
+      }
+    });
+    const searchFoods = sortedFoods.filter((food) => {
+      const keyword = searchKeyword.toLowerCase();
+      const nameMatch = food.foodName.toLowerCase().includes(keyword);
+      const ingredientMatch = food.foodIngredients?.some((ing) =>
+        ing.ingredientName.toLowerCase().includes(keyword)
+      );
+      return nameMatch || ingredientMatch;
+    });
+
 
   if (loading) {
     return (
@@ -158,7 +181,10 @@ export default function FoodsPage() {
     <PageLayout>
       <Title>음식 목록</Title>
       <FilterBar>
-        <SearchInput placeholder="음식명 또는 재료로 검색" />
+        
+        <SearchInput placeholder="음식명 또는 재료로 검색" value={searchKeyword}
+        onChange={(e) => setSearchKeyword(e.target.value)}/>
+
         <Button>검색</Button>
         <Select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
           <option>전체</option>
@@ -172,18 +198,20 @@ export default function FoodsPage() {
           <option>음료</option>
         </Select>
 
-        <Select>
+        <Select value={selectedLike} onChange={(e) => setSelectedLike(e.target.value)}>
+          <option>전체</option>
           <option>조회 순</option>
           <option>좋아요 순</option>
         </Select>
       </FilterBar>
 
       <ContentWrapper>
-        {filteredFoods.map((food) => (
-          <StyledLink to={`/foods/${food.foodId}`} key={food.foodId}>
-            <FoodCard food={food} />
-          </StyledLink>
-        ))}
+      {searchFoods.map((food) => (   
+        <StyledLink to={`/foods/${food.foodId}`} key={food.foodId}>
+          <FoodCard food={food} />
+        </StyledLink>
+      ))}
+
       </ContentWrapper>
 
       <Pagination />

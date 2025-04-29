@@ -156,37 +156,39 @@ export default function Login () {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-  const loginData = { email, password };
+    const loginData = { email, password };
 
-  try {
-    const response = await axios.post ("http://localhost:8080/auth/login", loginData);
-    console.log("로그인 응답:", response.data);
+    try {
+      const response = await axios.post ("http://localhost:8080/auth/login", loginData);
+      console.log("로그인 응답:", response.data);
 
-    // 응답 구조에 따라 유연하게 처리
-    const data = response.data?.data ?? response.data;
-    const { token, email: userEmail, memberId } = data;
-    
-    if (!memberId) {
-    throw new Error("응답에 사용자 ID가 없습니다.");
+      // 응답 구조에 따라 유연하게 처리
+      const data = response.data?.data ?? response.data;
+      console.log(response.headers)
+      const accessToken = response.headers["authorization"];
+      const { token, email: userEmail, memberId } = data;
+      
+      if (!memberId) {
+      throw new Error("응답에 사용자 ID가 없습니다.");
+      }
+
+        // 로컬스토리지에 저장
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("email", userEmail);
+      localStorage.setItem("userId", memberId.toString());
+
+
+      alert("로그인 완료");
+      navigate("/");
+
+    } catch (error) {
+      console.error("로그인 실패: ", error);
+      setEmail("");
+      setPassword("");
+      setErrorMessage("아이디 또는 비밀번호가 잘못되었습니다.\n 아이디와 비밀번호를 다시 입력해주세요");
     }
 
-      // 로컬스토리지에 저장
-    localStorage.setItem("token", token);
-    localStorage.setItem("email", userEmail);
-    localStorage.setItem("userId", memberId.toString());
-
-
-    alert("로그인 완료");
-    navigate("/");
-
-  } catch (error) {
-    console.error("로그인 실패: ", error);
-    setEmail("");
-    setPassword("");
-    setErrorMessage("아이디 또는 비밀번호가 잘못되었습니다.\n 아이디와 비밀번호를 다시 입력해주세요");
-  }
-
-};
+  };
 
     return (
     <Container>

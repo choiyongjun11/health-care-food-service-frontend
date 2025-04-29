@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -14,11 +14,17 @@ export default function FoodDetailPage() {
   const [food, setFood] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
+  const calledOnce = useRef(false); //한번만 호출하도록 막기(개발중에)
+ 
     const fetchFood = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/foods/${id}`);
+        setLoading(true);
+        const response = await axios.get(`http://localhost:8080/foods/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+             // JWT 저장했으면 꺼내오기
+          }
+        });
         setFood(response.data.data);
       } catch (err) {
         console.error("데이터 요청 실패:", err);
@@ -28,15 +34,43 @@ export default function FoodDetailPage() {
       }
     };
 
-    fetchFood();
-  }, [id]);
+
+    //좋아요 버튼 클릭 시 처리
+    const handleLike = async () => {
+      try {
+        // JWT 토큰이 필요하면 여기에 Authorization 헤더 추가해야 함
+        await axios.post(`http://localhost:8080/foods/${id}/like`, {}, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+             // JWT 저장했으면 꺼내오기
+          }
+        });
+
+        setFood(prev => ({
+          ...prev,
+          liked: !prev.liked,
+          likeCount: prev.liked ? prev.likeCount - 1 : prev.likeCount + 1,
+        }));
+
+      } catch (err) {
+        console.error("좋아요 요청 실패:", err);
+        alert("로그인 후 이용 가능합니다.");
+      }
+
+    };
+
+    useEffect(() => {
+      if(calledOnce.current) return;
+      calledOnce.current = true;
+      fetchFood();
+    },[id]);
 
   if (loading) return <PageLayout>불러오는 중...</PageLayout>;
   if (error) return <PageLayout>{error}</PageLayout>;
 
   return (
     <PageLayout>
-      <FoodDetailInfo food={food} />
+      <FoodDetailInfo food={food} onLike={handleLike} />
     </PageLayout>
   );
 

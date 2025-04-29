@@ -94,15 +94,11 @@ const LikeButton = styled.button`
   cursor: pointer;
 `;
 
-export default function FoodDetailInfo({ food }) {
+export default function FoodDetailInfo({ food, onLike }) {
   const navigate = useNavigate();
-  const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState(food.likes);
 
-  const handleLike = () => {
-    setLiked(!liked);
-    setLikes(prev => liked ? prev - 1 : prev + 1);
-  };
+  const ingredientNames = Array.isArray(food.foodIngredients)
+  ? food.foodIngredients.map(ingredient => ingredient.ingredientName).join(", ") : "";
 
   return (
     <Wrapper>
@@ -110,18 +106,18 @@ export default function FoodDetailInfo({ food }) {
       ▶ 목록으로 돌아가기
       </BackButton>
       <TopSection>
-        <Image src={food.image} alt={food.name} />
+      <Image src={`${process.env.PUBLIC_URL}/assets/${food.foodImageUrl}`} alt={food.foodName} />
         <Info>
-          <Category>{food.category}</Category>
-          <Title>{food.name}</Title>
-          <Description>식재료: {Array.isArray(food.ingredients)? food.ingredients.join(", "): food.ingredients} </Description>
-          <Description>설명: {food.description}</Description>
+          <Category>{food.foodCategory}</Category>
+          <Title>{food.foodName}</Title>
+          <Description>식재료: {ingredientNames} </Description>
+          <Description>설명: {food.foodDescription}</Description>
           <Stats>
-            <div>조회수: {food.view}</div>
-            <div>좋아요: {likes}</div>
+            <div>조회수: {food.viewCount}</div>
+            <div>좋아요: ❤️ {food.likeCount} </div>
           </Stats>
-          <LikeButton liked={liked} onClick={handleLike}>
-            {liked ? "좋아요 취소" : "좋아요"}
+          <LikeButton liked={food.liked} onClick={onLike}>
+          {food.liked ? "좋아요 취소" : "좋아요"}
           </LikeButton>
         </Info>
       </TopSection>

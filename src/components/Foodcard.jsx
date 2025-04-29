@@ -9,7 +9,6 @@ const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   width: 100%;
   min-height: 320px;
   border: 3px solid black;
@@ -23,7 +22,6 @@ const CardWrapper = styled.div`
   }
   
 `;
-
 
 const Info = styled.div`
   padding: 1rem;
@@ -75,8 +73,7 @@ const Stat = styled.div`
 export default function FoodCard({ food }) {
 
   const ingredientNames = Array.isArray(food.foodIngredients)
-    ? food.foodIngredients.map(ingredient => ingredient.ingredientName).join(", ")
-    : "";
+    ? food.foodIngredients.map(ingredient => ingredient.ingredientName).join(", ") : "";
 
   return (
     <CardWrapper>
@@ -84,12 +81,15 @@ export default function FoodCard({ food }) {
       <Info>
       <Image src={`${process.env.PUBLIC_URL}/assets/${food.foodImageUrl}`} alt={food.foodName} />
         <Title>{food.foodName}</Title>
-        <Desc>{ingredientNames}</Desc>
+        <Desc>{ingredientNames}
+     
+        </Desc>
       
         <Stat>
           조회수: {food.viewCount}
           <span>❤️ {food.likeCount}</span>
         </Stat>
+
       </Info>
     </CardWrapper>
   );
