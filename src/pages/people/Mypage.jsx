@@ -44,19 +44,23 @@ const TabButton = styled.button`
 // axios 통신 시도
 export default function MyPage() {
 
-
   const [activeTab, setActiveTab] = useState("settings");
   const [userData, setUserData] = useState(null);
   const id = localStorage.getItem("userId");
 
-  
 
   useEffect(() => {
     if (!id) return; // id가 없으면 API 요청 막기
   
     const fetchUser = async () => {
+      
       try {
-        const response = await axios.get(`http://localhost:8080/members/${id}`);
+        const response = await axios.get(`http://localhost:8080/members/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
         setUserData(response.data.data);
       } catch (error) {
         console.error("유저 정보 로딩 실패", error);
@@ -74,9 +78,11 @@ export default function MyPage() {
         phone: updatedUser.phone,
       };
   
-      console.log("업데이트할 데이터:", payload);
-  
-      const response = await axios.patch(`http://localhost:8080/members/${id}`, payload);
+      const response = await axios.patch(`http://localhost:8080/members/${id}`, payload, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
   
       alert("정보가 저장되었습니다.");
       setUserData((prev) => ({
@@ -88,17 +94,20 @@ export default function MyPage() {
       alert("저장 실패");
     }
   };
-
+  
   const handleDeleteUser = async () => {
     try {
-      await axios.delete(`http://localhost:8080/members/${id}`);
+      await axios.delete(`http://localhost:8080/members/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       alert("계정 삭제 완료");
       localStorage.clear();
       window.location.href = "/";
     } catch (error) {
       alert("계정 삭제 실패");
     }
-
   };
 
 
@@ -129,4 +138,6 @@ export default function MyPage() {
 
 
   );
+
+
 }

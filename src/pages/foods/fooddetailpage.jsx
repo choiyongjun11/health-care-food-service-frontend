@@ -15,7 +15,7 @@ export default function FoodDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const calledOnce = useRef(false); //한번만 호출하도록 막기(개발중에)
- 
+
     const fetchFood = async () => {
       try {
         setLoading(true);
@@ -38,26 +38,32 @@ export default function FoodDetailPage() {
     //좋아요 버튼 클릭 시 처리
     const handleLike = async () => {
       try {
-        // JWT 토큰이 필요하면 여기에 Authorization 헤더 추가해야 함
-        await axios.post(`http://localhost:8080/foods/${id}/like`, {}, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-             // JWT 저장했으면 꺼내오기
+        await axios.post(
+          `http://localhost:8080/foods/${id}/like`,
+          {}, 
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
           }
+        );
+
+
+        // 좋아요 상태 반영
+        setFood(prev => {
+          const wasLiked = !!prev.liked;
+          return {
+            ...prev,
+            liked: !wasLiked,
+            likeCount: wasLiked ? prev.likeCount - 1 : prev.likeCount + 1
+          };
         });
-
-        setFood(prev => ({
-          ...prev,
-          liked: !prev.liked,
-          likeCount: prev.liked ? prev.likeCount - 1 : prev.likeCount + 1,
-        }));
-
       } catch (err) {
         console.error("좋아요 요청 실패:", err);
         alert("로그인 후 이용 가능합니다.");
-      }
+    }
 
-    };
+  };
 
     useEffect(() => {
       if(calledOnce.current) return;

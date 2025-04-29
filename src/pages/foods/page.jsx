@@ -104,7 +104,13 @@ export default function FoodsPage() {
   const fetchFoods = async (page = 0) => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:8080/foods?page=${page + 1}&size=10`);
+      const response = await axios.get(`http://localhost:8080/foods?page=${page + 1}&size=10`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+
+      });
+
       setFoods(response.data.data);
       setPageInfo(response.data.pageInfo);
       setCurrentPage(page);

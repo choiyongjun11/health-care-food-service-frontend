@@ -94,8 +94,37 @@ const LikeButton = styled.button`
   cursor: pointer;
 `;
 
+const TabMenu = styled.div`
+  display: flex;
+  margin-top: 2rem;
+  border-bottom: 2px solid #ccc;
+`;
+
+const TabButton = styled.button`
+  flex: 1;
+  padding: 1rem;
+  background-color: ${({ active }) => (active ? "#d5ebd4" : "#f3f3f3")};
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  border-right: 1px solid #ccc;
+
+  &:last-child {
+    border-right: none;
+  }
+`;
+
+const TabContent = styled.div`
+  margin-top: 2rem;
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 10px;
+`;
+
 export default function FoodDetailInfo({ food, onLike }) {
   const navigate = useNavigate();
+  const [tab, setTab] = useState("recipe");
 
   const ingredientNames = Array.isArray(food.foodIngredients)
   ? food.foodIngredients.map(ingredient => ingredient.ingredientName).join(", ") : "";
@@ -121,6 +150,56 @@ export default function FoodDetailInfo({ food, onLike }) {
           </LikeButton>
         </Info>
       </TopSection>
+
+
+            <TabMenu>
+        <TabButton active={tab === "recipe"} onClick={() => setTab("recipe")}>요리법</TabButton>
+        <TabButton active={tab === "ingredients"} onClick={() => setTab("ingredients")}>재료</TabButton>
+        <TabButton active={tab === "reviews"} onClick={() => setTab("reviews")}>
+          리뷰({food.foodReviews.length})
+        </TabButton>
+      </TabMenu>
+
+
+      <TabContent>
+        {tab === "recipe" && (
+          <>
+            <h3>요리법 - 조리방법</h3>
+            {food.recipe?.process?.map(step => (
+              <p key={step.step}>
+                <strong>{step.step}. </strong> {step.instruction} ({step.cooktime}분)
+              </p>
+            ))}
+            <p>총 조리 시간: {food.recipe?.totalCookingTime}</p>
+            <p>난이도: {food.recipe?.difficulty}</p>
+          </>
+        )}
+
+        {tab === "ingredients" && (
+          <>
+            <h3>재료</h3>
+            <ul>
+              {food.foodIngredients?.map(ing => (
+                <li key={ing.ingredientId}>
+                  {ing.ingredientName} / {ing.ingredientType} / {ing.ingredientOrigin} / {ing.storageMethod}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {tab === "reviews" && (
+          <>
+            <h3>리뷰</h3>
+            {food.foodReviews?.map(review => (
+              <p key={review.reviewId}>
+                <strong>{review.memberName}</strong>: {review.content} ({review.reviewCreateDate})
+              </p>
+            ))}
+          </>
+        )}
+      </TabContent>
+
     </Wrapper>
   );
 };

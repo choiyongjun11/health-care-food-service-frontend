@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-
+import axios from "axios";
+import FoodCard from "./Foodcard";
 
 //ui 만 구현하자.
 
@@ -51,130 +52,85 @@ const Grid = styled.div`
   gap: 1.5rem;
 `;
 
-const FoodCard = styled.div`
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #fff;
-`;
-
-const FoodImage = styled.img`
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-`;
-
-const FoodInfo = styled.div`
-  padding: 1rem;
-`;
-
-const FoodTitle = styled.h3`
-  margin: 0;
-  font-size: 1.2rem;
-`;
-
-const FoodSub = styled.p`
-  margin: 4px 0;
-  font-size: 0.9rem;
-  color: #666;
-`;
-
-const HeartButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: ${props => (props.liked ? 'red' : '#ccc')};
-  cursor: pointer;
-`;
-
-const FoodWrapper = styled.div`
-  position: relative;
-`;
-
 export default function UserActivity() {
-  
+
   const [tab, setTab] = useState("likes");
+  const [likedFoods, setLikedFoods] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [healthTargets, setHealthTargets] = useState([]);
 
-  const [likedFoods, setLikedFoods] = useState([
-    {
-      id: 1,
-      name: "김밥",
-      date: "2023-04-01",
-      image: "/foods/kimbap.jpg",
-      liked: true, //좋아요 표시
-    },
-    {
-      id: 2,
-      name: "소고기",
-      date: "2023-04-02",
-      image: "/foods/soguggi.jpg",
-      liked: true,
-    },
-  ]);
+  const id = localStorage.getItem("userId");
 
-  const reviews = [
-    {
-      id: 1,
-      name: "김치찌개",
-      content: "김치가 잘 익어서 국물이 끝내줘요!",
-      date: "2023-04-16",
-      image: "/foods/kimchistew.jpg",
-    },
+  useEffect(() => {
+    if (!id) return;
 
-    {
-      id: 2,
-      name: "불고기",
-      content: "양념이 잘 배어있고 고기가 부드러워요.",
-      date: "2023-04-11",
-      image: "/foods/bulgogi.jpg",
-    },
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/members/${id}/actives`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
 
-  ];
+        const data = response.data.data;
+        console.log(data);
 
-  //좋아요 표시는 토글 방식으로 합니다. (좋아요 등록 & 취소) 기능
-  const toggleLike = (id) => {
-    setLikedFoods((prev) =>
-      prev.map((food) =>
-        food.id === id ? { ...food, liked: !food.liked } : food
-      )
-    );
-  };
+        if (data) {
+          setLikedFoods(data.likedFoods.map(food => ({
+            id: food.foodId,
+            likeCount: food.likeCount,
+            liked: food.liked,
+            foodName: food.foodName,
+            foodImageUrl: food.foodImageUrl,
+            foodCategory: food.foodCategory,
+            foodIngredients: food.foodIngredients
+          })));
 
-  //좋아요한 음식 & 작성한 리뷰 내역 (if - else 로 작성)
-  // 좋아요, 리뷰, 별점 정보를 foods 에서 가져와야 합니다.
+          setReviews(data.writtenReviews.map(review => ({
+            id: review.reviewId,
+            content: review.content,
+            date: review.reviewCreateDate,
+          })));
+
+          setHealthTargets(data.healthTargets.map(target => ({
+            id: target.targetId,
+            goalTypeCategory: target.goalTypeCategory,
+            goalTypeName: target.goalTypeName,
+            ageGroupName: target.ageGroupName,
+            targetStatus: target.targetStatus,
+          })));
+        }
+      } catch (error) {
+        console.error("활동 이력 로딩 실패:", error);
+      }
+    };
+
+    fetchUser();
+  }, [id]);
+
   const renderCards = () => {
     if (tab === "likes") {
-      return likedFoods.map((item) => (
-        <FoodCard key={item.id}>
-          <FoodWrapper>
-            <FoodImage src={item.image} alt={item.name} />
-            <HeartButton liked={item.liked} onClick={() => toggleLike(item.id)}>
-              {item.liked ? "❤️" : "🤍"}
-            </HeartButton>
+      return likedFoods.length > 0 ? likedFoods.map((food) => (
+        <FoodCard key={food.id} food={food} /> // 좋아요한 음식은 FoodCard로 출력
+      )) : <p>좋아요한 음식이 없습니다.</p>;
 
-          </FoodWrapper>
-          
-          <FoodInfo>
-            <FoodTitle>{item.name}</FoodTitle>
-            <FoodSub>{item.date} 좋아요</FoodSub>
-          </FoodInfo>
-          
-        </FoodCard>
-      ));
-    } else {
-      return reviews.map((item) => (
-        <FoodCard key={item.id}>
-          <FoodImage src={item.image} alt={item.name} />
-          <FoodInfo>
-            <FoodTitle>{item.name}</FoodTitle>
-            <FoodSub>{item.date} 작성함</FoodSub>
-            <FoodSub>{item.content}</FoodSub>
-          </FoodInfo>
-        </FoodCard>
-      ));
+    } else if (tab === "reviews") {
+      return reviews.length > 0 ? reviews.map((item) => (
+        <div key={item.id}>
+          <h3>리뷰 ID: {item.id}</h3>
+          <p>작성일: {item.date}</p>
+          <p>{item.content}</p>
+        </div>
+      )) : <p>작성한 리뷰가 없습니다.</p>;
+
+    } else if (tab === "targets") {
+      return healthTargets.length > 0 ? healthTargets.map((item) => (
+        <div key={item.id}>
+          <h3>{item.goalTypeCategory} - {item.goalTypeName}</h3>
+          <p>연령대: {item.ageGroupName}</p>
+          <p>상태: {item.targetStatus}</p>
+        </div>
+      )) : <p>설정한 목표가 없습니다.</p>;
     }
   };
 
@@ -182,14 +138,22 @@ export default function UserActivity() {
     <Container>
       <Card>
         <h2>활동 내역</h2>
-        <Description>좋아요한 음식과 작성한 리뷰를 확인할 수 있습니다.</Description>
+        <Description>좋아요한 음식, 작성한 리뷰, 설정한 목표를 확인할 수 있습니다.</Description>
         <Tabs>
-          <TabButton active={tab === "likes"} onClick={() => setTab("likes")}>좋아요한 음식</TabButton>
-          <TabButton active={tab === "reviews"} onClick={() => setTab("reviews")}>작성한 리뷰</TabButton>
+          <TabButton active={tab === "likes"} onClick={() => setTab("likes")}>
+            좋아요한 음식
+          </TabButton>
+          <TabButton active={tab === "reviews"} onClick={() => setTab("reviews")}>
+            작성한 리뷰
+          </TabButton>
+          <TabButton active={tab === "targets"} onClick={() => setTab("targets")}>
+            설정한 목표
+          </TabButton>
         </Tabs>
 
         <Grid>{renderCards()}</Grid>
       </Card>
     </Container>
   );
+
 }
