@@ -34,7 +34,7 @@ export default function Health() {
 
     <PageLayout>
 
-    <Title>건강</Title>
+    <Title>건강 목표 작 업 대 기 중</Title>
     
     </PageLayout>
 
